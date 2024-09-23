@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <header className="bg-blue-600 text-white">
+        <header className="bg-blue-200 text-black">
           <nav className="container mx-auto px-4 py-4">
             <ul className="flex flex-wrap justify-between items-center">
               <li><Link href="/" className="text-2xl font-bold">City General Hospital</Link></li>
@@ -27,14 +27,14 @@ export default function RootLayout({
               <li><Link href="/news">News</Link></li>
               <li><Link href="/about">About</Link></li>
               <li><Link href="/contact">Contact</Link></li>
-              <li><Link href="/ask" className="bg-white text-blue-600 px-4 py-2 rounded">Ask</Link></li>
+              <li><Link href="/ask" className="bg-white text-black px-4 py-2 rounded">Ask</Link></li>
             </ul>
           </nav>
         </header>
         <main className="container mx-auto px-4 py-8">
           {children}
         </main>
-        <footer className="bg-gray-200 text-center py-4">
+        <footer className="bg-gray-200 text-black text-center py-4">
           <p>&copy; 2024 City General Hospital. All rights reserved.</p>
         </footer>
       </body>
