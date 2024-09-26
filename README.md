@@ -2,7 +2,7 @@
 # AI Doctor
 
 This is a project for COMPE571 at SDSU Fall 2024
-
+cd 
 This project is build with:
 
 - Next.JS
@@ -35,6 +35,8 @@ Now the service should run on http://localhost:3000
 ## Authors
 
 - [@tribui1912](https://www.github.com/tribui1912)
+- [@rdmaiden](https://github.com/rdmaiden)
+- [@reemoawad](https://github.com/reemoawad)
 
 
 ## Roadmap
