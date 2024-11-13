@@ -16,8 +16,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <header className="bg-blue-200 text-black">
+      <body className={`${inter.className} flex flex-col min-h-screen`}>
+        <header className="bg-blue-200 text-black sticky top-0 z-50">
           <nav className="container mx-auto px-4 py-4">
             <ul className="flex flex-wrap justify-between items-center">
               <li><Link href="/" className="text-2xl font-bold">City General Hospital</Link></li>
@@ -31,7 +31,7 @@ export default function RootLayout({
             </ul>
           </nav>
         </header>
-        <main className="container mx-auto px-4 py-8">
+        <main className="container mx-auto px-4 py-8 flex-grow">
           {children}
         </main>
         <footer className="bg-gray-200 text-black text-center py-4">

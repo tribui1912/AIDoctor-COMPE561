@@ -1,9 +1,10 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import create_engine, Column, Integer, String, Text
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, Session
 from pydantic import BaseModel
 from typing import List
-import sqlite3
-from datetime import datetime
 
 app = FastAPI()
 
@@ -17,20 +18,33 @@ app.add_middleware(
 )
 
 # Database setup
-conn = sqlite3.connect('news.db')
-cursor = conn.cursor()
-cursor.execute('''
-    CREATE TABLE IF NOT EXISTS news_articles (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT NOT NULL,
-        date TEXT NOT NULL,
-        summary TEXT NOT NULL,
-        category TEXT NOT NULL,
-        content TEXT NOT NULL,
-        image_url TEXT NOT NULL
-    )
-''')
-conn.commit()
+SQLALCHEMY_DATABASE_URL = "sqlite:///./news.db"
+engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
+
+# SQLAlchemy Model
+class NewsArticleDB(Base):
+    __tablename__ = "news_articles"
+
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, nullable=False)
+    date = Column(String, nullable=False)
+    summary = Column(Text, nullable=False)
+    category = Column(String, nullable=False)
+    content = Column(Text, nullable=False)
+    image_url = Column(String, nullable=False)
+
+# Create tables
+Base.metadata.create_all(bind=engine)
+
+# Dependency to get DB session
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 class NewsArticle(BaseModel):
     id: int | None
@@ -104,13 +118,12 @@ sample_articles = [
 ]
 
 # Function to insert sample data
-def insert_sample_data():
-    for article in sample_articles:
-        cursor.execute('''
-            INSERT INTO news_articles (title, date, summary, category, content, image_url)
-            VALUES (?, ?, ?, ?, ?, ?)
-        ''', (article['title'], article['date'], article['summary'], article['category'], article['content'], article['image_url']))
-    conn.commit()
+
+def insert_sample_data(db: Session):
+    for article_data in sample_articles:
+        db_article = NewsArticleDB(**article_data)
+        db.add(db_article)
+    db.commit()
     print("Sample data inserted successfully.")
 
 # Call this function after creating the table
@@ -119,53 +132,44 @@ insert_sample_data()
 
 
 @app.get("/api/news", response_model=List[NewsArticle])
-async def get_news():
-    cursor.execute("""
-        SELECT id, title, date, summary, category, image_url 
-        FROM news_articles 
-        ORDER BY date DESC, id DESC 
-        LIMIT 6
-    """)
-    articles = cursor.fetchall()
-    return [
-        NewsArticle(id=row[0], title=row[1], date=row[2], summary=row[3], category=row[4], image_url=row[5], content="")
-        for row in articles
-    ]
+async def get_news(db: Session = Depends(get_db)):
+    articles = db.query(NewsArticleDB).order_by(NewsArticleDB.date.desc(), NewsArticleDB.id.desc()).limit(6).all()
+    return articles
 
 @app.get("/api/news/{article_id}", response_model=NewsArticle)
-async def get_news_article(article_id: int):
-    cursor.execute("SELECT * FROM news_articles WHERE id = ?", (article_id,))
-    article = cursor.fetchone()
+async def get_news_article(article_id: int, db: Session = Depends(get_db)):
+    article = db.query(NewsArticleDB).filter(NewsArticleDB.id == article_id).first()
     if article is None:
         raise HTTPException(status_code=404, detail="Article not found")
-    return NewsArticle(id=article[0], title=article[1], date=article[2], summary=article[3], 
-                       category=article[4], content=article[5], image_url=article[6])
+    return article
 
 @app.post("/api/news", response_model=NewsArticle)
-async def create_news_article(article: NewsArticleCreate):
-    cursor.execute(
-        "INSERT INTO news_articles (title, date, summary, category, content, image_url) VALUES (?, ?, ?, ?, ?, ?)",
-        (article.title, article.date, article.summary, article.category, article.content, article.image_url)
-    )
-    conn.commit()
-    new_id = cursor.lastrowid
-    return NewsArticle(id=new_id, **article.dict())
+async def create_news_article(article: NewsArticleCreate, db: Session = Depends(get_db)):
+    db_article = NewsArticleDB(**article.dict())
+    db.add(db_article)
+    db.commit()
+    db.refresh(db_article)
+    return db_article
 
 @app.put("/api/news/{article_id}", response_model=NewsArticle)
-async def update_news_article(article_id: int, article: NewsArticleCreate):
-    cursor.execute(
-        "UPDATE news_articles SET title = ?, date = ?, summary = ?, category = ?, content = ?, image_url = ? WHERE id = ?",
-        (article.title, article.date, article.summary, article.category, article.content, article.image_url, article_id)
-    )
-    conn.commit()
-    if cursor.rowcount == 0:
+async def update_news_article(article_id: int, article: NewsArticleCreate, db: Session = Depends(get_db)):
+    db_article = db.query(NewsArticleDB).filter(NewsArticleDB.id == article_id).first()
+    if db_article is None:
         raise HTTPException(status_code=404, detail="Article not found")
-    return NewsArticle(id=article_id, **article.dict())
+    
+    for key, value in article.dict().items():
+        setattr(db_article, key, value)
+    
+    db.commit()
+    db.refresh(db_article)
+    return db_article
 
 @app.delete("/api/news/{article_id}")
-async def delete_news_article(article_id: int):
-    cursor.execute("DELETE FROM news_articles WHERE id = ?", (article_id,))
-    conn.commit()
-    if cursor.rowcount == 0:
+async def delete_news_article(article_id: int, db: Session = Depends(get_db)):
+    db_article = db.query(NewsArticleDB).filter(NewsArticleDB.id == article_id).first()
+    if db_article is None:
         raise HTTPException(status_code=404, detail="Article not found")
+    
+    db.delete(db_article)
+    db.commit()
     return {"success": True}
