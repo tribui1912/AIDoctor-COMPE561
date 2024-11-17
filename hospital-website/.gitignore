@@ -12,6 +12,7 @@
 # next.js
 /.next/
 /out/
+/*/.next/
 
 # production
 /build
@@ -25,7 +26,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# local env files (openai key)
+# local env files
 .env*.local
 
 # vercel
@@ -34,3 +35,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# database
+*.db
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
