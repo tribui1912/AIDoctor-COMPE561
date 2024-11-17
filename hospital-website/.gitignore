@@ -37,7 +37,7 @@ yarn-error.log*
 next-env.d.ts
 
 # Database
-*.db
+**/*.db
 
 # OS generated files
 ._*
