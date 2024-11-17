@@ -16,18 +16,23 @@ out/
 
 # Production
 **/build
+dist/
+build/
 
-# Misc
-.DS_Store
-*.pem
+# Environment Variables
+.env
+.env.local
+.env*.local
+**/.env
+**/.env.local
+**/.env.development
+**/.env.test
+**/.env.production
 
 # Debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-# Local env files
-.env*.local
 
 # Vercel
 .vercel
@@ -38,11 +43,8 @@ next-env.d.ts
 
 # Database
 **/*.db
-
-# OS generated files
-._*
-.Spotlight-V100
-.Trashes
+**/*.sqlite
+**/*.sqlite3
 
 # Python
 __pycache__/
@@ -50,10 +52,12 @@ __pycache__/
 *$py.class
 *.so
 .Python
+venv/
 env/
-build/
+.env/
+.venv/
+ENV/
 develop-eggs/
-dist/
 downloads/
 eggs/
 .eggs/
@@ -65,5 +69,13 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
-.env
-venv/
+.pytest_cache/
+
+# OS generated files
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
