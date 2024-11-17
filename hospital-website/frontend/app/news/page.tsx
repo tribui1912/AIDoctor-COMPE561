@@ -16,6 +16,14 @@ type NewsArticle = {
   image_url: string;  // New field
 }
 
+const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
+}
+
 export default function News() {
   const [articles, setArticles] = useState<NewsArticle[]>([])
   const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null)
@@ -64,7 +72,9 @@ export default function News() {
             <Image src={article.image_url} alt={article.title} width={400} height={200} className="w-full h-48 object-cover" />
             <CardHeader>
               <CardTitle>{article.title}</CardTitle>
-              <CardDescription className="italic">{article.date} - {article.category}</CardDescription>
+              <CardDescription className="italic">
+                {formatDate(article.date)} - {article.category}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <p className="mb-4">{article.summary}</p>
@@ -79,7 +89,7 @@ export default function News() {
           <DialogHeader>
             <DialogTitle>{selectedArticle?.title}</DialogTitle>
             <DialogDescription className="italic">
-              {selectedArticle?.date} - {selectedArticle?.category}
+              {formatDate(selectedArticle?.date || '')} - {selectedArticle?.category}
             </DialogDescription>
           </DialogHeader>
           <div className="mt-4">
