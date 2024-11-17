@@ -71,6 +71,12 @@ var/
 *.egg
 .pytest_cache/
 
+# Backend specific
+backend/venv/
+backend/.venv/
+backend/env/
+backend/.env/
+
 # OS generated files
 .DS_Store
 ._*
