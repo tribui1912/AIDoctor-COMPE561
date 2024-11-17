@@ -36,6 +36,7 @@ class User(Base):
     verification_token = Column(String, nullable=True)
     email_verified = Column(Boolean, default=False)
     email_verified_at = Column(DateTime, nullable=True)
+    appointments = relationship("Appointment", back_populates="user")
 
     sessions = relationship("UserSession", back_populates="user")
     refresh_tokens = relationship("RefreshToken", back_populates="user")
@@ -109,3 +110,30 @@ class PasswordResetToken(Base):
     expires_at = Column(DateTime, nullable=False)
     used_at = Column(DateTime, nullable=True)
     is_used = Column(Boolean, default=False)
+
+class Doctor(Base):
+    __tablename__ = "doctors"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    specialty = Column(String, nullable=False)
+    email = Column(String, unique=True, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    appointments = relationship("Appointment", back_populates="doctor")
+
+class Appointment(Base):
+    __tablename__ = "appointments"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    doctor_id = Column(Integer, ForeignKey("doctors.id"), nullable=True)
+    date = Column(DateTime, nullable=False)
+    reason = Column(String, nullable=False)
+    status = Column(String, default="pending")
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    user = relationship("User", back_populates="appointments")
+    doctor = relationship("Doctor", back_populates="appointments")

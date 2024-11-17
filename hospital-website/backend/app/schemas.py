@@ -1,6 +1,6 @@
 from pydantic import BaseModel, EmailStr, ConfigDict
 from datetime import datetime
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 
 class NewsArticleBase(BaseModel):
     title: str
@@ -73,3 +73,79 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     email: Optional[str] = None
+
+class TokenResponse(BaseModel):
+    access_token: str
+    refresh_token: str
+    token_type: str
+
+class RefreshTokenRequest(BaseModel):
+    refresh_token: str
+
+class LoginResponse(BaseModel):
+    user: User
+    access_token: str
+    refresh_token: str
+    token_type: str
+
+class AppointmentBase(BaseModel):
+    date: datetime
+    reason: str
+    status: str = "pending"
+
+class AppointmentCreate(AppointmentBase):
+    user_id: int
+
+class AppointmentUpdate(BaseModel):
+    date: Optional[datetime] = None
+    reason: Optional[str] = None
+    status: Optional[str] = None
+    doctor_id: Optional[int] = None
+
+class Appointment(AppointmentBase):
+    id: int
+    user_id: int
+    doctor_id: Optional[int] = None
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        orm_mode = True
+
+class AdminLogin(BaseModel):
+    username: str
+    password: str
+
+class AdminToken(BaseModel):
+    access_token: str
+    token_type: str
+
+class AdminUpdate(BaseModel):
+    email: Optional[EmailStr] = None
+    password: Optional[str] = None
+    role: Optional[str] = None
+    permissions: Optional[Dict[str, List[str]]] = None
+
+class PaginatedNewsArticles(BaseModel):
+    total: int
+    items: List[NewsArticle]
+    skip: int
+    limit: int
+
+class NewsArticleUpdate(BaseModel):
+    title: Optional[str] = None
+    summary: Optional[str] = None
+    content: Optional[str] = None
+    category: Optional[str] = None
+    image_url: Optional[str] = None
+    status: Optional[str] = None
+
+class AdminStatistics(BaseModel):
+    total_articles: int
+    published_articles: int
+    draft_articles: int
+    total_views: int
+    articles_by_category: Dict[str, int]
+    recent_articles: List[NewsArticle]
+
+    model_config = ConfigDict(from_attributes=True)
