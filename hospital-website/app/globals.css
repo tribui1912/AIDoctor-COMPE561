@@ -56,7 +56,4 @@
   body {
     @apply bg-background text-foreground;
   }
-  h1 {
-    @apply sticky top-0 bg-white;
-  }
 }
