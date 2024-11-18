@@ -7,7 +7,7 @@ import bcrypt
 import secrets
 from typing import Optional
 from sqlalchemy.sql import func
-from .auth_utils import get_password_hash, verify_password
+from .password_utils import get_password_hash, verify_password
 
 def get_news_articles(db: Session, skip: int = 0, limit: int = 100):
     try:
