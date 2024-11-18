@@ -48,19 +48,31 @@ ACCESS_TOKEN_EXPIRE_MINUTES=30
 REFRESH_TOKEN_EXPIRE_DAYS=30
 EOF
 
-# Install Python dependencies
-echo "Installing Python dependencies..."
-pip install -r requirements.txt
+# Install Python 3.11 using Homebrew (Some dependencies are incompatible with Python 3.12 or later)
+echo "Installing Python 3.11..."
+brew install python@3.11
 
-# Initialize and seed database
+# Add Python 3.11 to PATH and make it the default
+echo 'export PATH="/opt/homebrew/opt/python@3.11/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+
+# Ensure pip is using Python 3.11
+echo "Setting up Python 3.11 environment..."
+python3.11 -m pip install --upgrade pip
+
+# Install Python dependencies using Python 3.11
+echo "Installing Python dependencies..."
+python3.11 -m pip install -r requirements.txt
+
+# Use Python 3.11 for database operations
 echo "Initializing database..."
-python init_db.py
+python3.11 init_db.py
 
 echo "Seeding database with sample data..."
-python seed_db.py
+python3.11 seed_db.py
 
 echo "Verifying database connection..."
-python verify_db.py
+python3.11 verify_db.py
 
 echo "Starting the server..."
-uvicorn main:app --reload --port 8000
+python3.11 -m uvicorn main:app --reload --port 8000
