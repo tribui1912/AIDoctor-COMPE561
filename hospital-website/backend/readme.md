@@ -1,33 +1,94 @@
-To install dependencies:
-```
-pip install -r requirements.txt
-```
+# Hospital Website Backend Setup
 
-To initialize the database:
-```
-python init_db.py
-```
+## PostgreSQL Database Setup
 
-To generate sample data:
-```
-python generate_sample_data.py
+1. Install PostgreSQL:
+   ```bash
+   # Ubuntu/Debian
+   sudo apt update
+   sudo apt install postgresql postgresql-contrib
 
-Create .env file and add the following:
-```
-SECRET_KEY=your-generated-key-here
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-REFRESH_TOKEN_EXPIRE_DAYS=30
-```
+   # macOS with Homebrew
+   brew install postgresql@17
 
-For the SECRET_KEY, you can use the following command:
-```
-openssl rand -hex 32
-```
+   # If using ZSH need to add to PATH (.zshrc)
+   export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
+   
+   # If using Bash need to add to PATH (.bash_profile)
+   export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
+   ```
 
-To run the server:
+2. Start PostgreSQL service:
+   ```bash
+   # Ubuntu/Debian
+   sudo service postgresql start
+
+   # macOS
+   brew services start postgresql@17
+   ```
+
+3. Create the databases:
+   ```bash
+   # Connect to PostgreSQL as the default user
+   psql postgres
+
+   # In PostgreSQL prompt, create databases
+   CREATE USER myuser WITH PASSWORD 'mypassword' CREATEDB; (use this for .env file)
+   CREATE DATABASE hospital_db OWNER myuser;
+   CREATE DATABASE hospital_test_db OWNER myuser;
+   GRANT ALL PRIVILEGES ON DATABASE hospital_db TO myuser;
+   GRANT ALL PRIVILEGES ON DATABASE hospital_test_db TO myuser;
+   
+   # Exit PostgreSQL prompt
+   \q
+   ```
+
+4. Create a .env file in the backend directory:
+   ```bash
+   DB_USER=myuser (change depend on how you set up your user)
+   DB_PASSWORD=mypassword (change depend on how you set up your user)
+   DB_HOST=localhost
+   DB_PORT=5432
+   DB_NAME=hospital_db
+   SECRET_KEY=your-secret-key
+   ACCESS_TOKEN_EXPIRE_MINUTES=30
+   REFRESH_TOKEN_EXPIRE_DAYS=30
+   ```
+
+5. Verify connection to database:
+   ```bash
+   python verify_db.py
+   ```
+
+6. Install Python dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+7. Initialize the database:
+   ```bash
+   python init_db.py
+   ```
+
+8. Generate sample data (optional):
+   ```bash
+   python seed_db.py
+   ```
+
+9. Run the server:
+   ```bash
+   python main.py
+   ```
+
+## Development
+
+- The API will be available at `http://localhost:8000`
+- API documentation at `http://localhost:8000/docs`
+- Alternative API docs at `http://localhost:8000/redoc`
+
+## Testing
+
+Run tests with:
+```bash
+python run_tests.py
 ```
-python main.py
-```
-
-
-

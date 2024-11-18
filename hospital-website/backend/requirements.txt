@@ -5,7 +5,7 @@ pydantic==2.6.1
 pydantic[email]
 python-jose[cryptography]
 python-multipart>=0.0.7
-aiosqlite
+psycopg2-binary==2.9.9
 bcrypt==4.1.2
 cryptography==42.0.5
 python-dotenv==1.0.0
