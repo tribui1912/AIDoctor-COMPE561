@@ -3,7 +3,7 @@
 ## All in one setup (macOS with ZSH)
 
 ```bash
-./setup_mac_zsh.sh
+chmod +x ./setup_mac_zsh.sh && ./setup_mac_zsh.sh
 ```
 
 If it is not allowing execute, run:
