@@ -1,30 +1,54 @@
 import pytest
 
-def test_user_signup(client):
-    user_data = {
+@pytest.fixture
+def test_user_data():
+    return {
         "email": "test@example.com",
         "password": "testpass123",
-        "name": "Test User"
+        "name": "Test User",
+        "phone": "1234567890"
     }
-    response = client.post("/api/auth/signup", json=user_data)
+
+def test_user_refresh_token(client, test_user_refresh_token):
+    """Test refreshing user access token"""
+    response = client.post(
+        "/api/auth/refresh",
+        json={"refresh_token": test_user_refresh_token.token}
+    )
     assert response.status_code == 200
     data = response.json()
-    assert data["email"] == user_data["email"]
+    assert "access_token" in data
+    assert "refresh_token" in data
+    assert data["token_type"] == "bearer"
+    assert data["refresh_token"] != test_user_refresh_token.token  # New token generated
 
-def test_user_login(client):
-    # First create a user
-    user_data = {
-        "email": "test@example.com",
-        "password": "testpass123",
-        "name": "Test User"
-    }
-    client.post("/api/auth/signup", json=user_data)
-    
-    # Then try to login
-    login_data = {
-        "username": "test@example.com",
-        "password": "testpass123"
-    }
-    response = client.post("/api/auth/login", data=login_data)
+def test_admin_refresh_token(client, test_admin_refresh_token):
+    """Test refreshing admin access token"""
+    response = client.post(
+        "/api/auth/refresh",
+        json={"refresh_token": test_admin_refresh_token.token}
+    )
     assert response.status_code == 200
-    assert "access_token" in response.json()
+    data = response.json()
+    assert "access_token" in data
+    assert "refresh_token" in data
+    assert data["token_type"] == "bearer"
+    assert data["refresh_token"] != test_admin_refresh_token.token  # New token generated
+
+def test_expired_refresh_token(client, expired_refresh_token):
+    """Test using expired refresh token"""
+    response = client.post(
+        "/api/auth/refresh",
+        json={"refresh_token": expired_refresh_token.token}
+    )
+    assert response.status_code == 401
+    assert "expired" in response.json()["detail"].lower()
+
+def test_invalid_refresh_token(client):
+    """Test using invalid refresh token"""
+    response = client.post(
+        "/api/auth/refresh",
+        json={"refresh_token": "invalid_token"}
+    )
+    assert response.status_code == 401
+    assert "invalid" in response.json()["detail"].lower()

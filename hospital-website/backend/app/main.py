@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.middleware import RequestLoggingMiddleware, CORSMiddleware
+from app.middleware.middleware import setup_middlewares
 from app.routers import news, auth, appointments, admin
 from app.database import engine
 from app import models
@@ -9,9 +9,8 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-# Middlewares
-app.add_middleware(RequestLoggingMiddleware)
-app.add_middleware(CORSMiddleware)
+# Setup middlewares
+setup_middlewares(app)
 
 # Routers
 app.include_router(news.router)

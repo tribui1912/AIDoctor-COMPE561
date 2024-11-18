@@ -7,6 +7,7 @@ import bcrypt
 import secrets
 from typing import Optional
 from sqlalchemy.sql import func
+from .auth_utils import get_password_hash, verify_password
 
 def get_news_articles(db: Session, skip: int = 0, limit: int = 100):
     try:
@@ -77,11 +78,12 @@ def get_user_by_email(db: Session, email: str):
     return db.query(models.User).filter(models.User.email == email).first()
 
 def create_user(db: Session, user: schemas.UserCreate):
-    hashed_password = bcrypt.hashpw(user.password.encode('utf-8'), bcrypt.gensalt())
+    hashed_password = get_password_hash(user.password)
     db_user = models.User(
         email=user.email,
         name=user.name,
-        password_hash=hashed_password.decode('utf-8')
+        phone=user.phone,
+        hashed_password=hashed_password
     )
     db.add(db_user)
     db.commit()
@@ -134,20 +136,24 @@ def create_refresh_token(db: Session, user_id: int) -> models.RefreshToken:
     return db_token
 
 def get_refresh_token(db: Session, token: str):
+    """Get refresh token from database"""
     return db.query(models.RefreshToken).filter(
         models.RefreshToken.token == token
     ).first()
 
 def revoke_refresh_token(db: Session, token: str):
+    """Revoke a refresh token"""
     db_token = get_refresh_token(db, token)
     if db_token:
         db_token.is_revoked = True
         db_token.revoked_at = datetime.utcnow()
         db.commit()
+        db.refresh(db_token)
     return db_token
 
 def create_appointment(db: Session, appointment: schemas.AppointmentCreate):
-    db_appointment = models.Appointment(**appointment.dict())
+    """Create a new appointment"""
+    db_appointment = models.Appointment(**appointment.model_dump())
     db.add(db_appointment)
     db.commit()
     db.refresh(db_appointment)
@@ -163,25 +169,29 @@ def get_appointment(db: Session, appointment_id: int):
     return db.query(models.Appointment).filter(models.Appointment.id == appointment_id).first()
 
 def update_appointment(db: Session, appointment_id: int, appointment: schemas.AppointmentUpdate):
+    """Update an appointment"""
     db_appointment = get_appointment(db, appointment_id)
     if not db_appointment:
         raise HTTPException(status_code=404, detail="Appointment not found")
     
-    for key, value in appointment.dict(exclude_unset=True).items():
-        setattr(db_appointment, key, value)
+    update_data = appointment.model_dump(exclude_unset=True)
+    for field, value in update_data.items():
+        setattr(db_appointment, field, value)
     
     db.commit()
     db.refresh(db_appointment)
     return db_appointment
 
 def delete_appointment(db: Session, appointment_id: int):
+    """Soft delete appointment by marking it as cancelled"""
     db_appointment = get_appointment(db, appointment_id)
     if not db_appointment:
         raise HTTPException(status_code=404, detail="Appointment not found")
     
-    db.delete(db_appointment)
+    db_appointment.status = "cancelled"
     db.commit()
-    return True
+    db.refresh(db_appointment)
+    return db_appointment
 
 def assign_doctor_to_appointment(db: Session, appointment_id: int, doctor_id: int):
     appointment = get_appointment(db, appointment_id)
@@ -261,3 +271,45 @@ def get_admin_statistics(db: Session):
 
 def get_admin_by_id(db: Session, admin_id: int):
     return db.query(models.Admin).filter(models.Admin.id == admin_id).first()
+
+def create_user_refresh_token(db: Session, user_id: int, token: str, expires_delta: timedelta = None):
+    """Create a new user refresh token"""
+    if expires_delta is None:
+        expires_delta = timedelta(days=7)
+    
+    db_token = models.RefreshToken(
+        token=token,
+        user_id=user_id,
+        expires_at=datetime.utcnow() + expires_delta
+    )
+    db.add(db_token)
+    db.commit()
+    db.refresh(db_token)
+    return db_token
+
+def create_admin_refresh_token(db: Session, admin_id: int, token: str, expires_delta: timedelta = None):
+    """Create a new admin refresh token"""
+    if expires_delta is None:
+        expires_delta = timedelta(days=7)
+    
+    db_token = models.RefreshToken(
+        token=token,
+        admin_id=admin_id,
+        expires_at=datetime.utcnow() + expires_delta
+    )
+    db.add(db_token)
+    db.commit()
+    db.refresh(db_token)
+    return db_token
+
+def verify_user_password(db: Session, email: str, password: str) -> bool:
+    user = get_user_by_email(db, email)
+    if not user:
+        return False
+    return verify_password(password, user.hashed_password)
+
+def get_user_appointments(db: Session, user_id: int):
+    """Get all appointments for a specific user"""
+    return db.query(models.Appointment)\
+             .filter(models.Appointment.user_id == user_id)\
+             .all()

@@ -1,10 +1,10 @@
-fastapi==0.109.1
+fastapi>=0.110.0
 uvicorn==0.27.0
 sqlalchemy==2.0.27
 pydantic==2.6.1
 pydantic[email]
 python-jose[cryptography]
-python-multipart
+python-multipart>=0.0.7
 aiosqlite
 bcrypt==4.1.2
 cryptography==42.0.5
@@ -12,3 +12,4 @@ python-dotenv==1.0.0
 pytest==7.4.0
 httpx==0.24.1
 pytest-asyncio==0.21.1
+starlette>=0.36.0
