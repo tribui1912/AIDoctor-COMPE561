@@ -1,5 +1,11 @@
 # Hospital Website Backend Setup
 
+## All in one setup (macOS with ZSH)
+
+```bash
+./setup_mac_zsh.sh
+```
+
 ## PostgreSQL Database Setup
 
 1. Install PostgreSQL:
@@ -77,7 +83,7 @@
 
 9. Run the server:
    ```bash
-   python main.py
+   uvicorn main:app --reload --port 8000
    ```
 
 ## Development
@@ -86,7 +92,7 @@
 - API documentation at `http://localhost:8000/docs`
 - Alternative API docs at `http://localhost:8000/redoc`
 
-## Testing
+## Testing (set up to test up to 80% coverage)
 
 Run tests with:
 ```bash
