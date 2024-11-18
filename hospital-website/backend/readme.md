@@ -33,7 +33,7 @@
    psql postgres
 
    # In PostgreSQL prompt, create databases
-   CREATE USER myuser WITH PASSWORD 'mypassword' CREATEDB; (use this for .env file)
+   CREATE USER myuser WITH PASSWORD 'mypassword' CREATEDB; ### Change depend on how you set up your user and use this for .env file
    CREATE DATABASE hospital_db OWNER myuser;
    CREATE DATABASE hospital_test_db OWNER myuser;
    GRANT ALL PRIVILEGES ON DATABASE hospital_db TO myuser;
@@ -45,8 +45,8 @@
 
 4. Create a .env file in the backend directory:
    ```bash
-   DB_USER=myuser (change depend on how you set up your user)
-   DB_PASSWORD=mypassword (change depend on how you set up your user)
+   DB_USER=myuser ### Change depend on how you set up your user
+   DB_PASSWORD=mypassword ### Change depend on how you set up your user
    DB_HOST=localhost
    DB_PORT=5432
    DB_NAME=hospital_db
