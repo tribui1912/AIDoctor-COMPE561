@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/bin/zsh
 
 echo "🏥 Starting Hospital Website Backend Setup for macOS..."
 
 # Check if Homebrew is installed
-if ! command -v brew &> /dev/null; then
+if (( ! $+commands[brew] )); then
     echo "Installing Homebrew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 else
@@ -14,9 +14,10 @@ fi
 echo "Installing PostgreSQL..."
 brew install postgresql@17
 
-# Add PostgreSQL to PATH
-echo 'export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"' >> ~/.zshrc
-source ~/.zshrc
+# Add PostgreSQL to PATH (safely)
+if ! grep -q 'postgresql@17/bin' ~/.zshrc; then
+    echo 'export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"' >> ~/.zshrc
+fi
 
 # Start PostgreSQL service
 echo "Starting PostgreSQL service..."
@@ -48,31 +49,50 @@ ACCESS_TOKEN_EXPIRE_MINUTES=30
 REFRESH_TOKEN_EXPIRE_DAYS=30
 EOF
 
-# Install Python 3.11 using Homebrew (Some dependencies are incompatible with Python 3.12 or later)
+# Install Python 3.11
 echo "Installing Python 3.11..."
 brew install python@3.11
 
-# Add Python 3.11 to PATH and make it the default
-echo 'export PATH="/opt/homebrew/opt/python@3.11/bin:$PATH"' >> ~/.zshrc
-source ~/.zshrc
+# Add Python 3.11 to PATH (safely)
+if ! grep -q 'python@3.11/bin' ~/.zshrc; then
+    echo 'export PATH="/opt/homebrew/opt/python@3.11/bin:$PATH"' >> ~/.zshrc
+fi
 
-# Ensure pip is using Python 3.11
-echo "Setting up Python 3.11 environment..."
-python3.11 -m pip install --upgrade pip
+# Export the PATH updates for the current session
+export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
+export PATH="/opt/homebrew/opt/python@3.11/bin:$PATH"
 
-# Install Python dependencies using Python 3.11
+# Create and activate a virtual environment
+echo "Creating Python virtual environment..."
+python3.11 -m venv venv
+source ./venv/bin/activate
+
+# Verify we're in the virtual environment
+which python
+which pip
+
+# Ensure pip is up to date
+echo "Upgrading pip..."
+python -m pip install --upgrade pip
+
+# Install dependencies with verbose output
 echo "Installing Python dependencies..."
-python3.11 -m pip install -r requirements.txt
+python -m pip install -r requirements.txt --verbose
 
-# Use Python 3.11 for database operations
+# Verify installations
+echo "Verifying installations..."
+python -c "import sqlalchemy; print(f'SQLAlchemy version: {sqlalchemy.__version__}')"
+python -c "import fastapi; print(f'FastAPI version: {fastapi.__version__}')"
+
+# Use Python with virtual environment for database operations
 echo "Initializing database..."
-python3.11 init_db.py
+python init_db.py
 
 echo "Seeding database with sample data..."
-python3.11 seed_db.py
+python seed_db.py
 
 echo "Verifying database connection..."
-python3.11 verify_db.py
+python verify_db.py
 
 echo "Starting the server..."
-python3.11 -m uvicorn main:app --reload --port 8000
+python -m uvicorn main:app --reload --port 8000
