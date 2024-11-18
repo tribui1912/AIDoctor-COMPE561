@@ -3,11 +3,15 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime, timedelta
+from dotenv import load_dotenv
 from app.database import Base, get_db
 from app.main import app
 from app.auth_utils import create_access_token
 from .utils.create_test_admin import create_test_admin, cleanup_test_admin
 import os
+
+# Load environment variables from .env
+load_dotenv()
 
 # Set test environment variables
 os.environ["SECRET_KEY"] = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"

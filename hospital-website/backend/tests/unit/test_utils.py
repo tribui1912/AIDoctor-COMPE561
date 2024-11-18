@@ -3,9 +3,10 @@ from app.auth_utils import create_access_token, get_current_user, get_current_ad
 from datetime import datetime, timedelta
 from fastapi import HTTPException
 import os
+from dotenv import load_dotenv
 
-# Set test environment variables
-os.environ["SECRET_KEY"] = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
+# Load environment variables from .env file
+load_dotenv()
 
 def test_create_access_token():
     """Test creating an access token with default expiry"""

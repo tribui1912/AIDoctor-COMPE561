@@ -6,6 +6,11 @@
 ./setup_mac_zsh.sh
 ```
 
+If it is not allowing execute, run:
+```bash
+chmod +x setup_mac_zsh.sh
+```
+
 ## PostgreSQL Database Setup
 
 1. Install PostgreSQL:
