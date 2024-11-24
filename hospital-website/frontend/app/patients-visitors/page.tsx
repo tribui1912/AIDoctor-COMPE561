@@ -1,18 +1,24 @@
-  'use client'
-  import { useState, useEffect } from 'react'
-  import { Dialog, DialogContent} from '@/components/ui/dialog';
-  import { motion, AnimatePresence } from 'framer-motion'
-  import { Button } from "@/components/ui/button"
-  import { Input } from "@/components/ui/input"
-  import { Label } from "@/components/ui/label"
-  import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-  
+'use client'
+import { useState, useEffect } from 'react'
+import { Dialog, DialogContent} from '@/components/ui/dialog';
+import { motion, AnimatePresence } from 'framer-motion'
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+
   export default function PatientsVisitors() {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [isLogin, setIsLogin] = useState(true)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [name, setName] = useState('')
+    const [appointmentDate, setAppointmentDate] = useState('')
+  
+    const handleAppointmentSubmit = (e: React.FormEvent) => {
+      e.preventDefault()
+      console.log('Appointment booked for:', appointmentDate)
+    }
+
     const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault()
       if (isLogin) {
@@ -21,6 +27,7 @@
         console.log('Sign up attempted with:', name, email, password)
       }
     }
+
     const toggleForm = () => setIsLogin(!isLogin)
   
     useEffect(() => {
@@ -33,7 +40,33 @@
           <h1 className="text-3xl font-bold mb-4">Patients & Visitors</h1>
           <p>Information for patients and visitors to make your hospital experience as comfortable as possible.</p>
         </div>
-  
+
+        <div className="w-full max-w-6xl flex flex-col md:flex-row gap-4">
+        <div className="flex-1 p-4 bg-white shadow-md rounded-lg order-2 md:order-1">
+          <h2 className="text-2xl font-semibold mb-4">Book Appointment</h2>
+          <form onSubmit={handleAppointmentSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="appointment-name">Name</Label>
+              <Input id="appointment-name" placeholder="Enter your name" required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="appointment-email">Email</Label>
+              <Input id="appointment-email" type="email" placeholder="Enter your email" required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="appointment-date">Select Date</Label>
+              <Input
+                id="appointment-date"
+                type="date"
+                value={appointmentDate}
+                onChange={(e) => setAppointmentDate(e.target.value)}
+                required
+              />
+            </div>
+            <Button type="submit" className="w-full">Book Appointment</Button>
+          </form>
+        </div>
+      </div> 
         <Dialog open={isPopupOpen} onOpenChange={setIsPopupOpen}>
           <DialogContent className="sm:max-w-md">
             <div className="px-6 py-4">
