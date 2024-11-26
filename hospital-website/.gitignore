@@ -88,4 +88,4 @@ Desktop.ini
 
 # Pytest
 **/.pytest_cache/
-**/.coverage/
+**/.coverage
