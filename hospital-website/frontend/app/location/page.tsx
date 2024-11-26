@@ -1,4 +1,4 @@
-/*************  ✨ Codeium Command 🌟  *************/
+
 export default function LocationPage() {
   return (
     <div className="space-y-4">
@@ -54,4 +54,3 @@ export default function LocationPage() {
     </div>
   );
 }
-/******  f580de8c-f4fa-4d25-b65e-fa4085642d72  *******/

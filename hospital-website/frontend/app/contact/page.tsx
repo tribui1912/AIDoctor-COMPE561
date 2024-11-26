@@ -1,4 +1,7 @@
 import { MapPin, Phone, Mail, Clock } from 'lucide-react'
+import { Button, buttonVariants } from "@/components/ui/button"
+import Link from "next/link"
+
 
 export default function Contact() {
   return (
@@ -64,9 +67,25 @@ export default function Contact() {
           </div>
         </section>
       </div>
+      
+      <h2 className="text-2xl font-semibold mb-4">Find Us </h2>
+    <div className="flex justify-center">
+      <Button
+        asChild
+        variant="outline" 
+        size="xl"
+        className="border-2"
+        text-xl
+      >
+        <Link href="/location">Our Locations</Link>
+      </Button>
+    </div>
+  
 
-      <section className="mt-8">
-        <h2 className="text-2xl font-semibold mb-4">Find Us </h2>
+
+
+      {/* <section className="mt-8">
+    
         <div className="aspect-w-16 aspect-h-9">
           <iframe 
             src="https://www.google.com/maps/embed/v1/place?q=San+diego+state+university&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8" 
@@ -79,7 +98,13 @@ export default function Contact() {
             className="w-full rounded-lg shadow-md"
           ></iframe>
         </div>
-      </section>
-    </div>
+      </section> */}
+      
+
+
+  
+
+
+    </div> 
   )
 }
