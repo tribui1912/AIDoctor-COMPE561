@@ -7,49 +7,56 @@ export default function DoctorsServices() {
       name: "Dr. Richard Webber",
       title: "Chief of Surgery",
       specialty: "Cardiothoracic Surgery",
-      image: "/placeholder.svg?height=300&width=300"
+      image: "https://assets-auto.rbl.ms/60dbbb4a77cb576fdbdb044851cad1f5314bdd87bf2fb5d29f56e04cd009e2be",
+      imageStyle: "object-top",
     },
     {
       name: "Dr. Meredith Grey",
       title: "Head of Neurology",
       specialty: "Neurological Surgery",
-      image: "/placeholder.svg?height=300&width=300"
+      image: "https://www.bostonmagazine.com/wp-content/uploads/sites/2/2013/10/greys-main1.jpg",
+      imageStyle: "object-[top_left]", 
     },
     {
       name: "Dr. Derek Shepherd",
       title: "Director of Oncology",
       specialty: "Surgical Oncology",
-      image: "/placeholder.svg?height=300&width=300"
+      image: "https://www.closerweekly.com/wp-content/uploads/2017/09/derek-shepherd-quotes.jpg?resize=800%2C800&quality=86&strip=all",
+      imageStyle: "object-left",
     },
     {
       name: "Dr. Alex Karev",
       title: "Chief of Orthopedics",
       specialty: "Orthopedic Surgery",
-      image: "/placeholder.svg?height=300&width=300"
+      image: "https://static.wikia.nocookie.net/my-high-school-musical-series/images/c/c6/AlexKarevS104.jpg/revision/latest/scale-to-width-down/1200?cb=20240323060734",
+      imageStyle: "object-top",
     },
     {
       name: "Dr. Christina Yang",
       title: "Chief of Pediatrics",
       specialty: "Pediatric Surgery",
-      image: "/placeholder.svg?height=300&width=300"
+      image: "https://hips.hearstapps.com/digitalspyuk.cdnds.net/18/12/1521768676-oh1.jpg",
+      imageStyle: "object-top",
     },
     {
       name: "Dr. Miranda Bailey",
       title: "Head of Ophthalmology",
       specialty: "Ophthalmology",
-      image: "/placeholder.svg?height=300&width=300"
+      image: "https://cdn1.edgedatg.com/aws/v2/abc/GreysAnatomy/blog/739398/201a7241d0b32b1f215a93abeb7c5193/1600x900-Q90_201a7241d0b32b1f215a93abeb7c5193.jpg",
+      imageStyle: "object-top",
     },
     {
       name: "Dr. Mark Sloan",
       title: "Director of Radiology",
       specialty: "Radiology",
-      image: "/placeholder.svg?height=300&width=300"
+      image: "https://upload.wikimedia.org/wikipedia/en/9/9a/Dr._Mark_Sloan.jpg",
     },
     {
       name: "Dr. Addison Montgomery",
       title: "Chief of Anesthesiology",
       specialty: "Anesthesiology",
-      image: "/placeholder.svg?height=300&width=300"
+      image: "https://i.pinimg.com/736x/4b/b3/f7/4bb3f76ffbee5be6f3840d6a7646753e.jpg",
+      imageStyle: "object-top",
     },
   ]
 
@@ -110,7 +117,7 @@ export default function DoctorsServices() {
                 src={doctor.image}
                 alt={`Portrait of ${doctor.name}`}
                 fill
-                className="object-cover rounded-lg shadow-md"
+                className={`object-cover rounded-lg shadow-md ${doctor.imageStyle}`}
               />
             </div>
             <h2 className="text-xl font-bold">{doctor.name}</h2>
@@ -144,4 +151,5 @@ export default function DoctorsServices() {
     </div>
   )
 }
+
 

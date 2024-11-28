@@ -35,6 +35,46 @@ const nextConfig = {
                 hostname: 'images.pexels.com',
                 pathname: '/**',
             },
+            {
+                protocol: 'https',
+                hostname: 'assets-auto.rbl.ms',
+                pathname: '/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'www.bostonmagazine.com',
+                pathname: '/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'www.closerweekly.com',
+                pathname: '/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'static.wikia.nocookie.net',
+                pathname: '/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'hips.hearstapps.com',
+                pathname: '/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'cdn1.edgedatg.com',
+                pathname: '/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'upload.wikimedia.org',
+                pathname: '/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'i.pinimg.com',
+                pathname: '/**',
+            },
         ],
     },
 };
