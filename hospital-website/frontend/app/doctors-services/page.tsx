@@ -71,40 +71,88 @@ export default function DoctorsServices() {
 
   const specialties = [
     {
-      name: "Cardiothoracic Surgery",
-      description: "24/7 emergency care with advanced trauma services. Our emergency department is equipped to handle all types of medical emergencies with rapid response times."
+      name: "Internal Medicine",
+      description: "Focuses on the diagnosis, treatment, and prevention of adult diseases."
     },
     {
-      name: "Neurological Surgery",
-      description: "Comprehensive care for adults including preventive services, chronic disease management, and complex diagnostic evaluations. Our team focuses on holistic patient care."
+      name: "Cardiology",
+      description: "Deals with disorders of the heart and blood vessels."
     },
     {
-      name: "Surgical Oncology",
-      description: "Experienced surgeons provide comprehensive surgical care for a wide range of conditions, including hernias, gallstones, and thyroid disorders."
+      name: "Pulmonology",
+      description: "Specializes in respiratory system diseases."
     },
     {
-      name: "Orthopedic Surgery",
-      description: "Comprehensive women's health services including obstetrics, gynecology, and breast health. We provide personalized care for women at every stage of life."
+      name: "Endocrinology",
+      description: "Focuses on hormonal imbalances and endocrine disorders."
     },
     {
-      name: "Pediatric Surgery",
-      description: "Comprehensive care for children from birth to age 18, including routine check-ups, vaccinations, and treatment for acute illnesses."
+      name: "Gastroenterology",
+      description: "Treats conditions of the digestive system."
     },
     {
-      name: "Ophthalmology",
-      description: "Comprehensive heart care including diagnostic testing, interventional procedures, and cardiac rehabilitation programs. Our team specializes in treating complex cardiovascular conditions with state-of-the-art technology."
+      name: "Neurology",
+      description: "Manages disorders of the brain, spinal cord, and nerves."
+    },
+    {
+      name: "Rheumatology",
+      description: "Specializes in autoimmune diseases and musculoskeletal disorders."
+    },
+    {
+      name: "Pediatrics",
+      description: "Focuses on medical care for infants, children, and adolescents."
+    },
+    {
+      name: "Physical Medicine and Rehabilitation",
+      description: "Restores function for people with physical impairments."
     },
     {
       name: "Radiology",
-      description: "Expert care for bone and joint conditions, sports injuries, and spine disorders. We offer both surgical and non-surgical treatments, including minimally invasive procedures."
+      description: "Uses imaging techniques like X-rays, CT scans, and MRIs for diagnosis."
     },
     {
-      name: "Anesthesiology",
-      description: "State-of-the-art imaging services, including X-ray, CT, MRI, and ultrasound. We also offer interventional radiology services."
+      name: "Surgery",
+      description: "Covers a broad range of surgical procedures, especially involving the abdomen and soft tissues."
     },
     {
-      name: "Psychology",
-      description: "Comprehensive mental health services, including counseling, therapy, and support groups. Our team of licensed therapists provides personalized care for all mental health conditions."
+      name: "Orthopedics",
+      description: "Focuses on the musculoskeletal system, including bones and joints."
+    },
+    {
+      name: "Neurosurgery",
+      description: "Treats surgical conditions of the nervous system."
+    },
+    {
+      name: "Cardiothoracic Surgery",
+      description: "Involves surgery of the heart, lungs, and chest."
+    },
+    {
+      name: "Plastic Surgery",
+      description: "Includes reconstructive and cosmetic procedures."
+    },
+    {
+      name: "Otolaryngology (ENT)",
+      description: "Deals with ear, nose, and throat surgeries."
+    },
+    {
+      name: "Psychiatry/Psychology",
+      description: "Manages mental health disorders. Provides counseling and therapy services."
+    },
+    {
+      name: "Oncology",
+      description: "Treats cancer patients."
+    },
+    {
+      name: "Emergency Medicine",
+      description: "Provides immediate care for acute injuries or illnesses."
+    },
+    {
+      name: "Obstetrics and Gynecology (OB/GYN)",
+      description: "Focuses on pregnancy, childbirth, and female reproductive health."
+    },
+    {
+      name: "Dermatology",
+      description: "Specializes in skin, hair, and nail conditions."
     }
   ]
 

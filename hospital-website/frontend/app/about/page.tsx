@@ -1,68 +1,185 @@
+'use client'
+
 import Image from 'next/image'
+import { motion } from 'framer-motion'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Building2, Heart, History, ListChecks, Hospital, Users, Stethoscope, Brain, Baby, Activity, HandHeart } from 'lucide-react'
+
+const fadeIn = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.5 }
+}
 
 export default function About() {
   return (
-    <div className="space-y-8">
-      <h1 className="text-4xl font-bold mb-6">About City General Hospital</h1>
-      
-      <section className="flex flex-col md:flex-row items-center gap-8">
-        <div className="md:w-1/2">
-          <Image
-            src=""
-            alt="City General Hospital Building"
-            width={600}
-            height={400}
-            className="rounded-lg shadow-md"
-          />
+    <div className="min-h-screen bg-background">
+      {/* Hero Section */}
+      <section className="relative h-[50vh] min-h-[400px] w-full">
+        <Image
+          src="https://t4.ftcdn.net/jpg/08/42/31/49/360_F_842314946_W6xsF6x15mA61W2wUbkbTCVRx7EMqvwe.jpg"
+          alt="City General Hospital Building"
+          fill
+          className="object-cover brightness-50"
+          priority
+        />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center text-white space-y-4 p-4">
+            <motion.h1 
+              className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight"
+              {...fadeIn}
+            >
+              City General Hospital
+            </motion.h1>
+            <motion.p 
+              className="text-lg md:text-xl max-w-2xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              Providing exceptional healthcare with compassion and expertise since 1950
+            </motion.p>
+          </div>
         </div>
-        <div className="md:w-1/2 space-y-4">
-          <h2 className="text-2xl font-semibold">Our Mission</h2>
-          <p>
-            At City General Hospital, our mission is to provide exceptional healthcare services with compassion and expertise. We are committed to improving the health and well-being of our community through innovative medical practices, cutting-edge technology, and a patient-centered approach to care.
-          </p>
-        </div>
       </section>
 
-      <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">Our History</h2>
-        <p>
-          Founded in 1950, City General Hospital has been serving our community for over seven decades. What started as a small clinic has grown into a state-of-the-art medical facility, consistently ranked among the top hospitals in the region. Our growth reflects our unwavering commitment to excellence in healthcare and our ability to adapt to the evolving needs of our patients.
-        </p>
-      </section>
+      <main className="container mx-auto px-4 py-12 space-y-12">
+        {/* Mission Section */}
+        <motion.section 
+          className="grid md:grid-cols-2 gap-8 items-center"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Heart className="h-6 w-6 text-primary" />
+                Our Mission
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">
+                At City General Hospital, our mission is to provide exceptional healthcare services with compassion and expertise. We are committed to improving the health and well-being of our community through innovative medical practices, cutting-edge technology, and a patient-centered approach to care.
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <History className="h-6 w-6 text-primary" />
+                Our History
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">
+                Founded in 1950, City General Hospital has been serving our community for over seven decades. What started as a small clinic has grown into a state-of-the-art medical facility, consistently ranked among the top hospitals in the region.
+              </p>
+            </CardContent>
+          </Card>
+        </motion.section>
 
-      <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">Our Values</h2>
-        <ul className="list-disc list-inside space-y-2">
-          <li>Compassion: We treat every patient with kindness, empathy, and respect.</li>
-          <li>Excellence: We strive for the highest standards in medical care and patient service.</li>
-          <li>Innovation: We embrace cutting-edge technologies and procedures to improve patient outcomes.</li>
-          <li>Integrity: We uphold the highest ethical standards in all our practices.</li>
-          <li>Collaboration: We foster a team-based approach to provide comprehensive care.</li>
-        </ul>
-      </section>
+        {/* Values Section */}
+        <motion.section 
+          className="space-y-6"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <h2 className="text-3xl font-bold tracking-tight flex items-center gap-2">
+            <ListChecks className="h-8 w-8 text-primary" />
+            Our Values
+          </h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              { icon: Heart, title: "Compassion", desc: "We treat every patient with kindness, empathy, and respect." },
+              { icon: Stethoscope, title: "Excellence", desc: "We strive for the highest standards in medical care and patient service." },
+              { icon: Brain, title: "Innovation", desc: "We embrace cutting-edge technologies and procedures to improve patient outcomes." },
+              { icon: HandHeart, title: "Integrity", desc: "We uphold the highest ethical standards in all our practices." },
+              { icon: Users, title: "Collaboration", desc: "We foster a team-based approach to provide comprehensive care." },
+              {
+                icon: Activity,
+                title: "Quality",
+                desc: "We are committed to providing high-quality care through our commitment to ongoing improvement and innovation."
+              }
+            ].map((value, index) => (
+              <Card key={index} className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <value.icon className="h-5 w-5 text-primary" />
+                    {value.title}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">{value.desc}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </motion.section>
 
-      <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">Our Facilities</h2>
-        <p>
-          City General Hospital boasts state-of-the-art facilities designed to provide the best possible care for our patients. Our campus includes:
-        </p>
-        <ul className="list-disc list-inside space-y-2">
-          <li>A 24/7 Emergency Department equipped to handle all types of medical emergencies</li>
-          <li>Advanced Imaging Center with MRI, CT, and PET scanning capabilities</li>
-          <li>Comprehensive Cancer Center offering the latest in oncology treatments</li>
-          <li>Modern Surgical Suites for both inpatient and outpatient procedures</li>
-          <li>Dedicated Women's Health Center and Maternity Ward</li>
-          <li>Pediatric Wing specially designed for the care of our youngest patients</li>
-          <li>Cardiac Care Unit with state-of-the-art monitoring and treatment facilities</li>
-        </ul>
-      </section>
+        {/* Facilities Section */}
+        <motion.section 
+          className="space-y-6"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <h2 className="text-3xl font-bold tracking-tight flex items-center gap-2">
+            <Building2 className="h-8 w-8 text-primary" />
+            Our Facilities
+          </h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              { icon: Hospital, title: "Emergency Department", desc: "24/7 equipped to handle all types of medical emergencies" },
+              { icon: Brain, title: "Advanced Imaging Center", desc: "MRI, CT, and PET scanning capabilities" },
+              { icon: Activity, title: "Cancer Center", desc: "Comprehensive oncology treatments" },
+              { icon: Stethoscope, title: "Surgical Suites", desc: "Modern facilities for inpatient and outpatient procedures" },
+              { icon: Heart, title: "Women's Health Center", desc: "Dedicated center with maternity ward" },
+              { icon: Baby, title: "Pediatric Wing", desc: "Specially designed for our youngest patients" }
+            ].map((facility, index) => (
+              <Card key={index} className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <facility.icon className="h-5 w-5 text-primary" />
+                    {facility.title}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">{facility.desc}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </motion.section>
 
-      <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">Community Involvement</h2>
-        <p>
-          We believe in giving back to the community that has supported us for so long. City General Hospital regularly organizes and participates in community health initiatives, free screening programs, and health education workshops. Our staff also volunteers their time and expertise to various local charities and outreach programs.
-        </p>
-      </section>
+        {/* Community Section */}
+        <motion.section 
+          className="space-y-6"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Users className="h-6 w-6 text-primary" />
+                Community Involvement
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">
+                We believe in giving back to the community that has supported us for so long. City General Hospital regularly organizes and participates in community health initiatives, free screening programs, and health education workshops. Our staff also volunteers their time and expertise to various local charities and outreach programs.
+              </p>
+            </CardContent>
+          </Card>
+        </motion.section>
+      </main>
     </div>
   )
 }
+
