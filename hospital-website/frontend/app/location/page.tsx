@@ -4,7 +4,7 @@ export default function LocationPage() {
       <h1 className="text-4xl font-bold mb-6">Our Locations</h1>
       <p>Visit us at any of our locations below.</p>
 
-      <div className="grid grid-cols-2 gap-4"> 
+      <div className="grid grid-cols-2 gap-4">
       <section className="space-y-4"> 
       <h2 className="text-2xl font-semibold mb-4"> San Diego, CA </h2>
         <p>5500 Campanile Dr, San Diego, CA 92182 </p>

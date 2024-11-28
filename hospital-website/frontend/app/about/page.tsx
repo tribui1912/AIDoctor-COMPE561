@@ -8,7 +8,7 @@ export default function About() {
       <section className="flex flex-col md:flex-row items-center gap-8">
         <div className="md:w-1/2">
           <Image
-            src="/placeholder.svg?height=400&width=600"
+            src=""
             alt="City General Hospital Building"
             width={600}
             height={400}
