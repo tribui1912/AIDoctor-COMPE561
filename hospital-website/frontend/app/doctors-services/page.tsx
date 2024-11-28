@@ -8,55 +8,64 @@ export default function DoctorsServices() {
       title: "Chief of Surgery",
       specialty: "Cardiothoracic Surgery",
       image: "https://assets-auto.rbl.ms/60dbbb4a77cb576fdbdb044851cad1f5314bdd87bf2fb5d29f56e04cd009e2be",
-      imageStyle: "object-top",
+      objectFit: "cover",
+      objectPosition: "100% 0%",
     },
     {
       name: "Dr. Meredith Grey",
       title: "Head of Neurology",
       specialty: "Neurological Surgery",
-      image: "https://www.bostonmagazine.com/wp-content/uploads/sites/2/2013/10/greys-main1.jpg",
-      imageStyle: "object-[top_left]", 
+      image: "https://s2.r29static.com/bin/entry/506/x,80/2031793/image.jpg",
+      objectFit: "cover",
+      objectPosition: "100% 1%",
     },
     {
       name: "Dr. Derek Shepherd",
       title: "Director of Oncology",
       specialty: "Surgical Oncology",
-      image: "https://www.closerweekly.com/wp-content/uploads/2017/09/derek-shepherd-quotes.jpg?resize=800%2C800&quality=86&strip=all",
-      imageStyle: "object-left",
+      image: "https://www.hollywoodreporter.com/wp-content/uploads/2023/04/GettyImages-93740544.jpg?w=800",
+      objectFit: "cover",
+      objectPosition: "30% 10%",
     },
     {
       name: "Dr. Alex Karev",
       title: "Chief of Orthopedics",
       specialty: "Orthopedic Surgery",
       image: "https://static.wikia.nocookie.net/my-high-school-musical-series/images/c/c6/AlexKarevS104.jpg/revision/latest/scale-to-width-down/1200?cb=20240323060734",
-      imageStyle: "object-top",
+      objectFit: "cover",
+      objectPosition: "top",
     },
     {
       name: "Dr. Christina Yang",
       title: "Chief of Pediatrics",
       specialty: "Pediatric Surgery",
       image: "https://hips.hearstapps.com/digitalspyuk.cdnds.net/18/12/1521768676-oh1.jpg",
-      imageStyle: "object-top",
+      objectFit: "cover",
+      objectPosition: "top",
     },
     {
       name: "Dr. Miranda Bailey",
       title: "Head of Ophthalmology",
       specialty: "Ophthalmology",
       image: "https://cdn1.edgedatg.com/aws/v2/abc/GreysAnatomy/blog/739398/201a7241d0b32b1f215a93abeb7c5193/1600x900-Q90_201a7241d0b32b1f215a93abeb7c5193.jpg",
-      imageStyle: "object-top",
+      objectFit: "cover",
+      objectPosition: "top",
     },
     {
-      name: "Dr. Mark Sloan",
+      name: "Dr. Jackson Avery ",
       title: "Director of Radiology",
       specialty: "Radiology",
-      image: "https://upload.wikimedia.org/wikipedia/en/9/9a/Dr._Mark_Sloan.jpg",
+      image: "https://i.ebayimg.com/images/g/apwAAOSwQjdieQlA/s-l1200.jpg",
+      objectFit: "cover",
+      objectPosition: "5% 10%",
     },
     {
       name: "Dr. Addison Montgomery",
       title: "Chief of Anesthesiology",
       specialty: "Anesthesiology",
       image: "https://i.pinimg.com/736x/4b/b3/f7/4bb3f76ffbee5be6f3840d6a7646753e.jpg",
-      imageStyle: "object-top",
+      objectFit: "cover",
+      objectPosition: "top",
     },
   ]
 
@@ -117,7 +126,11 @@ export default function DoctorsServices() {
                 src={doctor.image}
                 alt={`Portrait of ${doctor.name}`}
                 fill
-                className={`object-cover rounded-lg shadow-md ${doctor.imageStyle}`}
+                style={{
+                  objectFit: doctor.objectFit,
+                  objectPosition: doctor.objectPosition
+                }}
+                className="rounded-lg shadow-md"
               />
             </div>
             <h2 className="text-xl font-bold">{doctor.name}</h2>
@@ -151,5 +164,4 @@ export default function DoctorsServices() {
     </div>
   )
 }
-
 

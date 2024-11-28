@@ -12,12 +12,12 @@ const nextConfig = {
             },
             {
                 protocol: 'https',
-                hostname: 'th-thumbnailer.cdn-si-edu.com',
+                hostname: 's2.r29static.com',
                 pathname: '/**',
             },
             {
                 protocol: 'https',
-                hostname: 'calhospital.org',
+                hostname: 'www.hollywoodreporter.com',
                 pathname: '/**',
             },
             {
@@ -67,7 +67,7 @@ const nextConfig = {
             },
             {
                 protocol: 'https',
-                hostname: 'upload.wikimedia.org',
+                hostname: 'i.ebayimg.com',
                 pathname: '/**',
             },
             {
@@ -80,3 +80,4 @@ const nextConfig = {
 };
 
 export default nextConfig;
+
