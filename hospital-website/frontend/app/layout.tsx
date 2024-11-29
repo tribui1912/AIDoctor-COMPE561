@@ -21,11 +21,11 @@ export default function RootLayout({
           <nav className="container mx-auto px-4 py-4">
             <ul className="flex flex-wrap justify-between items-center">
               <li><Link href="/" className="text-2xl font-bold">City General Hospital</Link></li>
-              <li><Link href="/doctors-services">Doctors & Services</Link></li>
-              <li><Link href="/location">Location</Link></li>
-              <li><Link href="/patients-visitors">Patients & Visitors</Link></li>
-              <li><Link href="/news">News</Link></li>
               <li><Link href="/about">About</Link></li>
+              <li><Link href="/doctors-services">Doctors & Services</Link></li>
+              <li><Link href="/patients-visitors">Patients & Visitors</Link></li>
+              <li><Link href="/location">Locations</Link></li>
+              <li><Link href="/news">News</Link></li>
               <li><Link href="/contact">Contact</Link></li>
               <li><Link href="/ask" className="bg-white text-black px-4 py-2 rounded">Ask</Link></li>
             </ul>

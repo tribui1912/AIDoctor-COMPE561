@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import { Card, CardContent } from "@/components/ui/card"
 
 export default function DoctorsServices() {
   const doctors = [
@@ -69,92 +68,66 @@ export default function DoctorsServices() {
     },
   ]
 
-  const specialties = [
-    {
-      name: "Internal Medicine",
-      description: "Focuses on the diagnosis, treatment, and prevention of adult diseases."
-    },
-    {
-      name: "Cardiology",
-      description: "Deals with disorders of the heart and blood vessels."
-    },
-    {
-      name: "Pulmonology",
-      description: "Specializes in respiratory system diseases."
-    },
-    {
-      name: "Endocrinology",
-      description: "Focuses on hormonal imbalances and endocrine disorders."
-    },
-    {
-      name: "Gastroenterology",
-      description: "Treats conditions of the digestive system."
-    },
-    {
-      name: "Neurology",
-      description: "Manages disorders of the brain, spinal cord, and nerves."
-    },
-    {
-      name: "Rheumatology",
-      description: "Specializes in autoimmune diseases and musculoskeletal disorders."
-    },
-    {
-      name: "Pediatrics",
-      description: "Focuses on medical care for infants, children, and adolescents."
-    },
-    {
-      name: "Physical Medicine and Rehabilitation",
-      description: "Restores function for people with physical impairments."
-    },
-    {
-      name: "Radiology",
-      description: "Uses imaging techniques like X-rays, CT scans, and MRIs for diagnosis."
-    },
-    {
-      name: "Surgery",
-      description: "Covers a broad range of surgical procedures, especially involving the abdomen and soft tissues."
-    },
-    {
-      name: "Orthopedics",
-      description: "Focuses on the musculoskeletal system, including bones and joints."
-    },
-    {
-      name: "Neurosurgery",
-      description: "Treats surgical conditions of the nervous system."
-    },
-    {
-      name: "Cardiothoracic Surgery",
-      description: "Involves surgery of the heart, lungs, and chest."
-    },
-    {
-      name: "Plastic Surgery",
-      description: "Includes reconstructive and cosmetic procedures."
-    },
-    {
-      name: "Otolaryngology (ENT)",
-      description: "Deals with ear, nose, and throat surgeries."
-    },
-    {
-      name: "Psychiatry/Psychology",
-      description: "Manages mental health disorders. Provides counseling and therapy services."
-    },
-    {
-      name: "Oncology",
-      description: "Treats cancer patients."
-    },
-    {
-      name: "Emergency Medicine",
-      description: "Provides immediate care for acute injuries or illnesses."
-    },
-    {
-      name: "Obstetrics and Gynecology (OB/GYN)",
-      description: "Focuses on pregnancy, childbirth, and female reproductive health."
-    },
-    {
-      name: "Dermatology",
-      description: "Specializes in skin, hair, and nail conditions."
-    }
-  ]
+  const specialties = {
+    "Medical Specialties": [
+      { name: "Internal Medicine", description: "Focuses on the diagnosis, treatment, and prevention of adult diseases." },
+      { name: "Cardiology", description: "Deals with disorders of the heart and blood vessels." },
+      { name: "Pulmonology", description: "Specializes in respiratory system diseases." },
+      { name: "Endocrinology", description: "Focuses on hormonal imbalances and endocrine disorders." },
+      { name: "Gastroenterology", description: "Treats conditions of the digestive system." },
+      { name: "Neurology", description: "Manages disorders of the brain, spinal cord, and nerves." },
+      { name: "Rheumatology", description: "Specializes in autoimmune diseases and musculoskeletal disorders." },
+    ],
+    "Surgical Specialties": [
+      { name: "General Surgery", description: "Covers a broad range of surgical procedures, especially involving the abdomen and soft tissues." },
+      { name: "Orthopedics", description: "Focuses on the musculoskeletal system, including bones and joints." },
+      { name: "Neurosurgery", description: "Treats surgical conditions of the nervous system." },
+      { name: "Cardiothoracic Surgery", description: "Involves surgery of the heart, lungs, and chest." },
+      { name: "Plastic Surgery", description: "Includes reconstructive and cosmetic procedures." },
+      { name: "Otolaryngology (ENT)", description: "Deals with ear, nose, and throat surgeries." },
+    ],
+    "Pediatric Specialties": [
+      { name: "Pediatrics", description: "Focuses on medical care for infants, children, and adolescents." },
+      { name: "Pediatric Surgery", description: "Surgical care for children." },
+    ],
+    "Women's Health": [
+      { name: "Obstetrics and Gynecology (OB/GYN)", description: "Focuses on pregnancy, childbirth, and female reproductive health." },
+      { name: "Reproductive Medicine", description: "Addresses fertility and reproductive issues." },
+    ],
+    "Emergency and Acute Care": [
+      { name: "Emergency Medicine", description: "Provides immediate care for acute injuries or illnesses." },
+      { name: "Trauma Surgery", description: "Specialized care for traumatic injuries." },
+    ],
+    "Oncology and Hematology": [
+      { name: "Oncology", description: "Treats cancer patients." },
+      { name: "Hematology", description: "Focuses on blood disorders, including anemia and leukemia." },
+    ],
+    "Mental Health": [
+      { name: "Psychiatry", description: "Manages mental health disorders." },
+      { name: "Psychology", description: "Provides counseling and therapy services." },
+    ],
+    "Specialized Fields": [
+      { name: "Dermatology", description: "Treats skin, hair, and nail conditions." },
+      { name: "Ophthalmology", description: "Focuses on eye and vision care." },
+      { name: "Urology", description: "Treats urinary tract and male reproductive system issues." },
+      { name: "Nephrology", description: "Specializes in kidney care and treatment." },
+      { name: "Infectious Diseases", description: "Manages diseases caused by infectious agents." },
+      { name: "Allergy and Immunology", description: "Focuses on allergies and immune system disorders." },
+    ],
+    "Diagnostic Services": [
+      { name: "Radiology", description: "Uses imaging techniques like X-rays, CT scans, and MRIs for diagnosis." },
+      { name: "Pathology", description: "Analyzes tissues, organs, and body fluids for diagnosis." },
+    ],
+    "Rehabilitation and Therapy": [
+      { name: "Physical Medicine and Rehabilitation", description: "Restores function for people with physical impairments." },
+      { name: "Occupational Therapy", description: "Helps patients regain skills for daily activities." },
+      { name: "Speech Therapy", description: "Treats communication and swallowing disorders." },
+    ],
+    "Supportive and Palliative Care": [
+      { name: "Palliative Medicine", description: "Focuses on improving quality of life for patients with serious illnesses." },
+      { name: "Pain Management", description: "Treats chronic pain conditions." },
+    ],
+  }
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-12">
@@ -168,8 +141,8 @@ export default function DoctorsServices() {
       {/* Doctors Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         {doctors.map((doctor, index) => (
-          <div key={index} className="flex flex-col items-center text-center">
-            <div className="relative w-full aspect-square mb-4">
+          <div key={index} className="flex flex-col items-center text-center group">
+            <div className="relative w-full aspect-square mb-4 overflow-hidden rounded-lg">
               <Image
                 src={doctor.image}
                 alt={`Portrait of ${doctor.name}`}
@@ -178,7 +151,7 @@ export default function DoctorsServices() {
                   objectFit: doctor.objectFit,
                   objectPosition: doctor.objectPosition
                 }}
-                className="rounded-lg shadow-md"
+                className="transition-transform duration-300 group-hover:scale-110"
               />
             </div>
             <h2 className="text-xl font-bold">{doctor.name}</h2>
@@ -191,14 +164,19 @@ export default function DoctorsServices() {
       {/* Specialties Section */}
       <div className="mt-16">
         <h2 className="text-3xl font-bold text-center mb-8">Our Specialties</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {specialties.map((specialty, index) => (
-            <Card key={index}>
-              <CardContent className="p-6">
-                <h3 className="text-xl font-bold mb-3">{specialty.name}</h3>
-                <p className="text-muted-foreground">{specialty.description}</p>
-              </CardContent>
-            </Card>
+        <div className="space-y-8">
+          {Object.entries(specialties).map(([category, specialtiesList], index) => (
+            <div key={index} className="bg-muted rounded-lg p-6">
+              <h3 className="text-2xl font-bold mb-4">{category}</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {specialtiesList.map((specialty, specialtyIndex) => (
+                  <div key={specialtyIndex} className="bg-background rounded-lg p-4 hover:bg-muted/80 transition-colors">
+                    <h4 className="text-lg font-semibold mb-2">{specialty.name}</h4>
+                    <p className="text-muted-foreground text-sm">{specialty.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       </div>
