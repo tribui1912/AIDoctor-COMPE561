@@ -32,6 +32,8 @@ class UserCreate(BaseModel):
     password: constr(min_length=8)
     name: str
     phone: str
+    role: str = "user"
+    status: str = "active"
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -146,12 +148,24 @@ class AdminUpdate(BaseModel):
     password: Optional[str] = None
     model_config = ConfigDict(from_attributes=True)
 
+class NewsArticleResponse(BaseModel):
+    id: int
+    title: str
+    summary: str
+    content: str
+    category: str
+    image_url: str
+    status: str
+    date: datetime
+    
+    model_config = ConfigDict(from_attributes=True)
+
 class PaginatedNewsArticles(BaseModel):
     total: int
-    items: List[NewsArticle]
+    items: List[NewsArticleResponse]
     skip: int
     limit: int
-
+    
     model_config = ConfigDict(from_attributes=True)
 
 class NewsArticleUpdate(BaseModel):
@@ -165,11 +179,87 @@ class NewsArticleUpdate(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 class AdminStatistics(BaseModel):
-    total_articles: int
-    published_articles: int
-    draft_articles: int
-    total_views: int
-    articles_by_category: Dict[str, int]
-    recent_articles: List[NewsArticle]
+    totalUsers: int
+    totalArticles: int
+    totalViews: int
+
+    model_config = ConfigDict(from_attributes=True)
+
+class UserResponse(BaseModel):
+    id: int
+    name: str
+    email: str
+    role: str = "user"
+    status: str
+    is_active: bool
+
+    model_config = ConfigDict(from_attributes=True)
+
+    @classmethod
+    def from_admin(cls, admin: "Admin") -> "UserResponse":
+        return cls(
+            id=admin.id,
+            name=admin.username,
+            email=admin.email,
+            role="admin",
+            status="active" if admin.is_active else "inactive",
+            is_active=admin.is_active
+        )
+
+    @classmethod
+    def from_user(cls, user: "User") -> "UserResponse":
+        return cls(
+            id=user.id,
+            name=user.name,
+            email=user.email,
+            role="user",
+            status="active" if user.is_active else "inactive",
+            is_active=user.is_active
+        )
+
+class AdminUserCreate(BaseModel):
+    name: str
+    email: EmailStr
+    password: str
+    role: str = "user"
+    status: str = "active"
+    phone: Optional[str] = None
+    permissions: Optional[Dict[str, List[str]]] = None
+
+    model_config = ConfigDict(from_attributes=True)
+
+class PublicNewsArticle(BaseModel):
+    id: int
+    title: str
+    summary: str
+    content: str
+    category: str
+    image_url: str
+    date: datetime
+    
+    model_config = ConfigDict(from_attributes=True)
+
+class AdminNewsArticle(NewsArticle):
+    admin_id: int
+    status: str
+    
+    model_config = ConfigDict(from_attributes=True)
+
+class PaginatedAdminNewsArticles(BaseModel):
+    total: int
+    items: List[AdminNewsArticle]
+    skip: int
+    limit: int
+    
+    model_config = ConfigDict(from_attributes=True)
+
+class AdminResponse(BaseModel):
+    id: int
+    username: str
+    email: str
+    role: str = "admin"
+    status: str
+    is_active: bool
+    permissions: Optional[Dict[str, List[str]]] = None
 
     model_config = ConfigDict(from_attributes=True)

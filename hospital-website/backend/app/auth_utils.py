@@ -13,6 +13,7 @@ load_dotenv()
 
 from .database import get_db
 from . import crud
+from .models import Admin
 
 # Configuration
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -71,7 +72,7 @@ async def get_current_user(
 async def get_current_admin(
     token: str = Depends(oauth2_scheme),
     db: Session = Depends(get_db)
-):
+) -> Admin:
     """Get current admin from JWT token"""
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -81,7 +82,7 @@ async def get_current_admin(
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         admin_id: str = payload.get("sub")
-        if admin_id is None or payload.get("type") != "admin":
+        if admin_id is None:
             raise credentials_exception
     except JWTError:
         raise credentials_exception
