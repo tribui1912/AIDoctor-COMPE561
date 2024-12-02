@@ -16,22 +16,24 @@ import { getCookie } from 'cookies-next'
 import { useRouter } from 'next/navigation'
 
 interface AdminUser {
-  id: number | string
+  id: number
   username: string
   email: string
   role: 'admin'
   status: string
   is_active: boolean
   permissions?: Record<string, string[]>
+  created_at: string
 }
 
 interface RegularUser {
-  id: number | string
+  id: number
   name: string
   email: string
   role: 'user'
   status: string
   is_active: boolean
+  created_at: string
 }
 
 type User = AdminUser | RegularUser
@@ -45,6 +47,7 @@ export default function UsersPage() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
+  const [isAddingAdmin, setIsAddingAdmin] = useState(false)
 
   const fetchUsers = async () => {
     try {
@@ -115,12 +118,27 @@ export default function UsersPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Users Management</h1>
-        <Button onClick={() => {
-          setSelectedUser(null)
-          setIsEditOpen(true)
-        }}>
-          Create New User
-        </Button>
+        <div className="space-x-4">
+          <Button 
+            onClick={() => {
+              setSelectedUser(null)
+              setIsEditOpen(true)
+              setIsAddingAdmin(false)
+            }}
+          >
+            Add User
+          </Button>
+          <Button 
+            variant="secondary"
+            onClick={() => {
+              setSelectedUser(null)
+              setIsEditOpen(true)
+              setIsAddingAdmin(true)
+            }}
+          >
+            Add Admin
+          </Button>
+        </div>
       </div>
 
       <div className="space-y-8">
@@ -222,6 +240,7 @@ export default function UsersPage() {
         open={isEditOpen}
         onOpenChange={setIsEditOpen}
         onSuccess={fetchUsers}
+        isAddingAdmin={isAddingAdmin}
       />
 
       <DeleteUserDialog

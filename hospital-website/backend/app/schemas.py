@@ -28,13 +28,13 @@ class UserBase(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 class UserCreate(BaseModel):
-    email: EmailStr
-    password: constr(min_length=8)
     name: str
-    phone: str
+    email: EmailStr
+    password: str
     role: str = "user"
     status: str = "active"
-
+    phone: Optional[str] = None
+    
     model_config = ConfigDict(from_attributes=True)
 
 class User(UserBase):
@@ -48,17 +48,33 @@ class User(UserBase):
     email_verified_at: Optional[datetime]
     model_config = ConfigDict(from_attributes=True)
 
+class UserUpdate(BaseModel):
+    name: Optional[str] = None
+    email: Optional[EmailStr] = None
+    password: Optional[str] = None
+    is_active: Optional[bool] = None
+    phone: Optional[str] = None
+    
+    model_config = ConfigDict(from_attributes=True)
+
 class AdminBase(BaseModel):
     username: str
     email: EmailStr
 
     model_config = ConfigDict(from_attributes=True)
 
-class AdminCreate(AdminBase):
+class AdminCreate(BaseModel):
+    username: str
+    email: EmailStr
     password: str
-    role: str = 'editor'
-    permissions: Optional[Dict[str, Any]]
-
+    permissions: Optional[Dict[str, List[str]]] = {
+        "news": ["create", "read", "update", "delete"],
+        "appointments": ["create", "read", "update", "delete"],
+        "users": ["read", "update", "delete"]
+    }
+    is_active: bool = True
+    role: str = "admin"
+    
     model_config = ConfigDict(from_attributes=True)
 
 class Admin(AdminBase):
@@ -144,8 +160,12 @@ class AdminToken(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 class AdminUpdate(BaseModel):
+    username: Optional[str] = None
     email: Optional[EmailStr] = None
     password: Optional[str] = None
+    is_active: Optional[bool] = None
+    permissions: Optional[Dict[str, List[str]]] = None
+    
     model_config = ConfigDict(from_attributes=True)
 
 class NewsArticleResponse(BaseModel):
@@ -175,8 +195,11 @@ class NewsArticleUpdate(BaseModel):
     category: Optional[str] = None
     image_url: Optional[str] = None
     status: Optional[str] = None
-
+    
     model_config = ConfigDict(from_attributes=True)
+
+    def dict(self, *args, **kwargs):
+        return self.model_dump(*args, **kwargs)
 
 class AdminStatistics(BaseModel):
     totalUsers: int
@@ -189,32 +212,33 @@ class UserResponse(BaseModel):
     id: int
     name: str
     email: str
+    is_active: bool = True
     role: str = "user"
-    status: str
-    is_active: bool
-
+    status: str = "active"
+    created_at: datetime
+    
     model_config = ConfigDict(from_attributes=True)
 
     @classmethod
-    def from_admin(cls, admin: "Admin") -> "UserResponse":
+    def from_user(cls, user):
         return cls(
-            id=admin.id,
-            name=admin.username,
-            email=admin.email,
-            role="admin",
-            status="active" if admin.is_active else "inactive",
-            is_active=admin.is_active
+            id=user.id,
+            email=user.email,
+            name=user.name,
+            is_active=user.is_active,
+            role=user.role,
+            created_at=user.created_at
         )
 
     @classmethod
-    def from_user(cls, user: "User") -> "UserResponse":
+    def from_admin(cls, admin):
         return cls(
-            id=user.id,
-            name=user.name,
-            email=user.email,
-            role="user",
-            status="active" if user.is_active else "inactive",
-            is_active=user.is_active
+            id=admin.id,
+            email=admin.email,
+            name=admin.username,
+            is_active=admin.is_active,
+            role="admin",
+            created_at=admin.created_at
         )
 
 class AdminUserCreate(BaseModel):
@@ -257,9 +281,10 @@ class AdminResponse(BaseModel):
     id: int
     username: str
     email: str
+    is_active: bool = True
     role: str = "admin"
-    status: str
-    is_active: bool
+    status: str = "active"
     permissions: Optional[Dict[str, List[str]]] = None
-
+    created_at: datetime
+    
     model_config = ConfigDict(from_attributes=True)

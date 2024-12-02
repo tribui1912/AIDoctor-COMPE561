@@ -9,6 +9,7 @@ import {
   import { Label } from '@/components/ui/label'
   import { useState, useEffect } from 'react'
   import { Textarea } from '@/components/ui/textarea'
+  import { getCookie } from 'cookies-next'
   
   interface Article {
     id?: number;
@@ -49,32 +50,37 @@ import {
     }, [article])
   
     const handleSubmit = async (e: React.FormEvent) => {
-      e.preventDefault()
-      
+      e.preventDefault();
       try {
-        const url = article 
-          ? `http://localhost:8000/api/admin/news/${article.id}`
-          : 'http://localhost:8000/api/admin/news'
+        const token = getCookie('adminToken');
+        if (!token) {
+          throw new Error('No admin token found');
+        }
+
+        const endpoint = `http://localhost:8000/api/admin/news/${article?.id}`;
         
-        const response = await fetch(url, {
-          method: article ? 'PUT' : 'POST',
+        const response = await fetch(endpoint, {
+          method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify(formData)
-        })
-  
+        });
+
+        const data = await response.json();
+
         if (!response.ok) {
-          throw new Error('Failed to save article')
+          throw new Error(data.detail || 'Failed to update article');
         }
-  
-        onSuccess()
-        onOpenChange(false)
+
+        onSuccess();
+        onOpenChange(false);
       } catch (error) {
-        console.error('Error saving article:', error)
+        console.error('Error updating article:', error);
+        alert(error instanceof Error ? error.message : 'An error occurred');
       }
-    }
+    };
   
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>

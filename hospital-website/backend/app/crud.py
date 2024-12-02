@@ -221,24 +221,19 @@ def create_admin_access_token(admin_id: int):
 def get_news_articles_count(db: Session):
     return db.query(models.NewsArticle).count()
 
-def update_admin(db: Session, admin_id: int, admin_update: schemas.AdminUpdate):
-    db_admin = db.query(models.Admin).filter(models.Admin.id == admin_id).first()
-    if not db_admin:
-        raise HTTPException(status_code=404, detail="Admin not found")
-    
-    update_data = admin_update.dict(exclude_unset=True)
-    if "password" in update_data:
-        update_data["password_hash"] = bcrypt.hashpw(
-            update_data.pop("password").encode('utf-8'),
-            bcrypt.gensalt()
-        ).decode('utf-8')
-    
-    for key, value in update_data.items():
-        setattr(db_admin, key, value)
-    
-    db.commit()
-    db.refresh(db_admin)
-    return db_admin
+def update_admin(db: Session, admin_id: int, update_data: dict):
+    try:
+        db_admin = get_admin_by_id(db, admin_id)
+        if db_admin:
+            for key, value in update_data.items():
+                setattr(db_admin, key, value)
+            db.commit()
+            db.refresh(db_admin)
+        return db_admin
+    except Exception as e:
+        print(f"Error in update_admin: {str(e)}")
+        db.rollback()
+        raise e
 
 def get_news_categories(db: Session):
     return db.query(models.NewsArticle.category).distinct().all()
@@ -355,3 +350,18 @@ def delete_user(db: Session, user_id: int):
         status_code=404,
         detail="User not found"
     )
+
+def get_user(db: Session, user_id: int):
+    return db.query(models.User).filter(models.User.id == user_id).first()
+
+def update_user(db: Session, user_id: int, update_data: dict):
+    db_user = get_user(db, user_id)
+    if db_user:
+        for key, value in update_data.items():
+            setattr(db_user, key, value)
+        db.commit()
+        db.refresh(db_user)
+    return db_user
+
+def get_admin_by_email(db: Session, email: str):
+    return db.query(models.Admin).filter(models.Admin.email == email).first()

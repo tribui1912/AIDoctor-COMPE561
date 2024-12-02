@@ -3,10 +3,11 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 from .. import crud, models, schemas
 from ..database import get_db
-from ..auth_utils import get_current_admin
+from ..auth_utils import get_current_admin, get_password_hash
 from datetime import datetime
 from sqlalchemy import func
 import secrets
+import bcrypt
 
 router = APIRouter(
     prefix="/api/admin",
@@ -80,16 +81,73 @@ async def create_news_article(
 ):
     return crud.create_news_article(db, article, current_admin.id)
 
-@router.put("/news/{article_id}", response_model=schemas.NewsArticle)
-async def update_news_article(
+@router.put("/news/{article_id}", response_model=schemas.AdminNewsArticle)
+async def update_article(
     article_id: int,
     article: schemas.NewsArticleUpdate,
     db: Session = Depends(get_db),
     current_admin: models.Admin = Depends(get_current_admin)
 ):
-    article_dict = article.model_dump(exclude_unset=True)
-    article_dict["date"] = datetime.utcnow()
-    return crud.update_news_article(db, article_id, article_dict)
+    """Update a news article"""
+    try:
+        # Check if article exists
+        db_article = crud.get_news_article(db, article_id)
+        if not db_article:
+            raise HTTPException(
+                status_code=404,
+                detail="Article not found"
+            )
+        
+        # Check if admin is the owner or has sufficient permissions
+        if db_article.admin_id != current_admin.id and not current_admin.permissions.get("news", []):
+            raise HTTPException(
+                status_code=403,
+                detail="Not authorized to edit this article"
+            )
+        
+        # Create update_data dictionary manually from non-None values
+        update_data = {}
+        if article.title is not None:
+            update_data["title"] = article.title
+        if article.summary is not None:
+            update_data["summary"] = article.summary
+        if article.content is not None:
+            update_data["content"] = article.content
+        if article.category is not None:
+            update_data["category"] = article.category
+        if article.image_url is not None:
+            update_data["image_url"] = article.image_url
+        if article.status is not None:
+            update_data["status"] = article.status
+            
+        print(f"Update data received: {update_data}")  # Debug log
+        
+        # Update the article object
+        for key, value in update_data.items():
+            setattr(db_article, key, value)
+        
+        db.commit()
+        db.refresh(db_article)
+        
+        return schemas.AdminNewsArticle(
+            id=db_article.id,
+            title=db_article.title,
+            summary=db_article.summary,
+            content=db_article.content,
+            category=db_article.category,
+            image_url=db_article.image_url,
+            date=db_article.date,
+            admin_id=db_article.admin_id,
+            status=db_article.status
+        )
+        
+    except Exception as e:
+        print(f"Error updating article: {str(e)}")
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
 
 @router.delete("/news/{article_id}")
 async def delete_news_article(
@@ -133,16 +191,21 @@ async def get_statistics(
 
 @router.get("/users", response_model=List[schemas.UserResponse])
 async def get_users(
-    skip: int = 0,
-    limit: int = 100,
     db: Session = Depends(get_db),
     current_admin: models.Admin = Depends(get_current_admin)
 ):
     """Get all users (admin only)"""
-    users = crud.get_users(db, skip=skip, limit=limit)
+    users = db.query(models.User).all()
     return [
-        schemas.UserResponse.from_admin(user) if isinstance(user, models.Admin)
-        else schemas.UserResponse.from_user(user)
+        schemas.UserResponse(
+            id=user.id,
+            name=user.name,
+            email=user.email,
+            is_active=user.is_active,
+            role="user",
+            status="active" if user.is_active else "inactive",
+            created_at=user.created_at
+        ) 
         for user in users
     ]
 
@@ -163,38 +226,54 @@ async def get_admin_stats(
 
 @router.post("/users", response_model=schemas.UserResponse)
 async def create_user(
-    user: schemas.AdminUserCreate,
+    user: schemas.UserCreate,
     db: Session = Depends(get_db),
     current_admin: models.Admin = Depends(get_current_admin)
 ):
     """Create a new user (admin only)"""
-    # Check if email already exists
-    db_user = crud.get_user_by_email(db, email=user.email)
-    if db_user:
-        raise HTTPException(
-            status_code=400,
-            detail="Email already registered"
-        )
-    
-    if user.role == "admin":
-        # Create admin user
-        admin_data = schemas.AdminCreate(
-            username=user.name,
+    try:
+        # Check if email already exists
+        db_user = crud.get_user_by_email(db, user.email)
+        if db_user:
+            raise HTTPException(
+                status_code=400,
+                detail="Email already registered"
+            )
+        
+        # Create new user
+        hashed_password = get_password_hash(user.password)
+        
+        new_user = models.User(
+            name=user.name,
             email=user.email,
-            password=user.password,
-            role="admin",
-            permissions=user.permissions or {
-                "news": ["create", "read", "update", "delete"],
-                "appointments": ["create", "read", "update", "delete"],
-                "users": ["read", "update", "delete"]
-            }
+            hashed_password=hashed_password,
+            is_active=True,
+            phone=user.phone
         )
-        created_user = crud.create_admin(db, admin_data)
-        return schemas.UserResponse.from_admin(created_user)
-    else:
-        # Create regular user
-        created_user = crud.create_user(db, user)
-        return schemas.UserResponse.from_user(created_user)
+        
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+        
+        return schemas.UserResponse(
+            id=new_user.id,
+            name=new_user.name,
+            email=new_user.email,
+            is_active=new_user.is_active,
+            role="user",
+            status="active",
+            created_at=new_user.created_at
+        )
+        
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        print(f"Error creating user: {str(e)}")
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error creating user: {str(e)}"
+        )
 
 @router.delete("/users/{user_id}")
 async def delete_regular_user(
@@ -260,18 +339,19 @@ async def get_admins(
     db: Session = Depends(get_db),
     current_admin: models.Admin = Depends(get_current_admin)
 ):
-    """Get all admin users"""
+    """Get all admins (admin only)"""
     admins = db.query(models.Admin).all()
     return [
-        {
-            "id": admin.id,
-            "username": admin.username,
-            "email": admin.email,
-            "role": "admin",
-            "status": "active" if admin.is_active else "inactive",
-            "is_active": admin.is_active,
-            "permissions": admin.permissions
-        }
+        schemas.AdminResponse(
+            id=admin.id,
+            username=admin.username,
+            email=admin.email,
+            is_active=admin.is_active,
+            role="admin",
+            status="active" if admin.is_active else "inactive",
+            permissions=admin.permissions,
+            created_at=admin.created_at
+        )
         for admin in admins
     ]
 
@@ -293,3 +373,221 @@ async def get_regular_users(
         }
         for user in users
     ]
+
+@router.put("/users/{user_id}", response_model=schemas.UserResponse)
+async def update_user(
+    user_id: int,
+    user: schemas.UserUpdate,
+    db: Session = Depends(get_db),
+    current_admin: models.Admin = Depends(get_current_admin)
+):
+    """Update a user (admin only)"""
+    db_user = crud.get_user(db, user_id)
+    if not db_user:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+    
+    for key, value in user.model_dump(exclude_unset=True).items():
+        setattr(db_user, key, value)
+    
+    db.commit()
+    db.refresh(db_user)
+    return schemas.UserResponse.from_user(db_user)
+
+@router.put("/admins/{admin_id}", response_model=schemas.AdminResponse)
+async def update_admin(
+    admin_id: int,
+    admin: schemas.AdminUpdate,
+    db: Session = Depends(get_db),
+    current_admin: models.Admin = Depends(get_current_admin)
+):
+    """Update an admin user"""
+    db_admin = crud.get_admin(db, admin_id)
+    if not db_admin:
+        raise HTTPException(
+            status_code=404,
+            detail="Admin not found"
+        )
+    
+    for key, value in admin.model_dump(exclude_unset=True).items():
+        setattr(db_admin, key, value)
+    
+    db.commit()
+    db.refresh(db_admin)
+    return schemas.AdminResponse.from_orm(db_admin)
+
+@router.patch("/admins/{admin_id}", response_model=schemas.AdminResponse)
+async def patch_admin(
+    admin_id: int,
+    admin: schemas.AdminUpdate,
+    db: Session = Depends(get_db),
+    current_admin: models.Admin = Depends(get_current_admin)
+):
+    """Update an admin user"""
+    try:
+        db_admin = crud.get_admin_by_id(db, admin_id)
+        if not db_admin:
+            raise HTTPException(
+                status_code=404,
+                detail="Admin not found"
+            )
+        
+        # Create update_data dictionary manually from non-None values
+        update_data = {}
+        if admin.username is not None:
+            update_data["username"] = admin.username
+        if admin.email is not None:
+            update_data["email"] = admin.email
+        if admin.password is not None:
+            hashed_password = bcrypt.hashpw(
+                admin.password.encode('utf-8'), 
+                bcrypt.gensalt()
+            )
+            update_data["password_hash"] = hashed_password.decode('utf-8')
+        if admin.is_active is not None:
+            update_data["is_active"] = admin.is_active
+        if admin.permissions is not None:
+            update_data["permissions"] = admin.permissions
+            
+        print(f"Update data received: {update_data}")  # Debug log
+        
+        # Update the admin object
+        for key, value in update_data.items():
+            setattr(db_admin, key, value)
+        
+        db.commit()
+        db.refresh(db_admin)
+        
+        return schemas.AdminResponse(
+            id=db_admin.id,
+            username=db_admin.username,
+            email=db_admin.email,
+            is_active=db_admin.is_active,
+            role="admin",
+            status="active" if db_admin.is_active else "inactive",
+            permissions=db_admin.permissions,
+            created_at=db_admin.created_at
+        )
+    except Exception as e:
+        print(f"Error updating admin: {str(e)}")
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
+
+@router.patch("/users/{user_id}", response_model=schemas.UserResponse)
+async def patch_user(
+    user_id: int,
+    user: schemas.UserUpdate,
+    db: Session = Depends(get_db),
+    current_admin: models.Admin = Depends(get_current_admin)
+):
+    """Update a user (admin only)"""
+    try:
+        db_user = crud.get_user(db, user_id)
+        if not db_user:
+            raise HTTPException(
+                status_code=404,
+                detail="User not found"
+            )
+        
+        # Create update_data dictionary manually from non-None values
+        update_data = {}
+        if user.name is not None:
+            update_data["name"] = user.name
+        if user.email is not None:
+            update_data["email"] = user.email
+        if user.password is not None:
+            update_data["hashed_password"] = get_password_hash(user.password)
+        if user.is_active is not None:
+            update_data["is_active"] = user.is_active
+        if user.phone is not None:
+            update_data["phone"] = user.phone
+            
+        print(f"Update data received: {update_data}")  # Debug log
+        
+        # Update the user object
+        for key, value in update_data.items():
+            setattr(db_user, key, value)
+        
+        db.commit()
+        db.refresh(db_user)
+        
+        return schemas.UserResponse(
+            id=db_user.id,
+            name=db_user.name,
+            email=db_user.email,
+            is_active=db_user.is_active,
+            role="user",
+            status="active" if db_user.is_active else "inactive",
+            created_at=db_user.created_at
+        )
+    except Exception as e:
+        print(f"Error updating user: {str(e)}")
+
+@router.post("/admins", response_model=schemas.AdminResponse)
+async def create_admin(
+    admin: schemas.AdminCreate,
+    db: Session = Depends(get_db),
+    current_admin: models.Admin = Depends(get_current_admin)
+):
+    """Create a new admin"""
+    try:
+        # Check if username already exists
+        db_admin = crud.get_admin_by_username(db, admin.username)
+        if db_admin:
+            raise HTTPException(
+                status_code=400,
+                detail="Username already registered"
+            )
+        
+        # Check if email already exists
+        db_admin = crud.get_admin_by_email(db, admin.email)
+        if db_admin:
+            raise HTTPException(
+                status_code=400,
+                detail="Email already registered"
+            )
+        
+        # Create new admin
+        hashed_password = bcrypt.hashpw(
+            admin.password.encode('utf-8'), 
+            bcrypt.gensalt()
+        )
+        
+        new_admin = models.Admin(
+            username=admin.username,
+            email=admin.email,
+            password_hash=hashed_password.decode('utf-8'),
+            permissions=admin.permissions,
+            is_active=admin.is_active,
+            role=admin.role
+        )
+        
+        db.add(new_admin)
+        db.commit()
+        db.refresh(new_admin)
+        
+        return schemas.AdminResponse(
+            id=new_admin.id,
+            username=new_admin.username,
+            email=new_admin.email,
+            is_active=new_admin.is_active,
+            role="admin",
+            status="active" if new_admin.is_active else "inactive",
+            permissions=new_admin.permissions,
+            created_at=new_admin.created_at
+        )
+        
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        print(f"Error creating admin: {str(e)}")
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error creating admin: {str(e)}"
+        )
