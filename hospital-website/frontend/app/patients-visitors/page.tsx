@@ -15,6 +15,9 @@ const [name, setName] = useState('')
 const [appointmentDate, setAppointmentDate] = useState('')
 const [chatMessage, setChatMessage] = useState('')
 const [chatMessages, setChatMessages] = useState<string[]>([])
+const [messages, setMessages] = useState<{ role: 'user' | 'assistant', content: string }[]>([])
+const [isLoading, setIsLoading] = useState(false)
+const [input, setInput] = useState('')
 
 const handleAppointmentSubmit = (e: React.FormEvent) => {
   e.preventDefault()
@@ -30,11 +33,35 @@ const handleSubmit = (e: React.FormEvent) => {
   }
 }
 
-const handleChatSubmit = (e: React.FormEvent) => {
+const handleChatSubmit = async (e: React.FormEvent) => {
   e.preventDefault()
-  if (chatMessage.trim()) {
-    setChatMessages([...chatMessages, chatMessage])
-    setChatMessage('')
+  if (!input.trim()) return
+
+  const userMessage = { role: 'user' as const, content: input }
+  setMessages(prev => [...prev, userMessage])
+  setInput('')
+  setIsLoading(true)
+
+  try {
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ messages: [...messages, userMessage] }),
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch response')
+    }
+
+    const data = await response.json()
+    setMessages(prev => [...prev, { role: 'assistant', content: data.message }])
+  } catch (error) {
+    console.error('Error:', error)
+    setMessages(prev => [...prev, { role: 'assistant', content: 'Sorry, I encountered an error. Please try again.' }])
+  } finally {
+    setIsLoading(false)
   }
 }
 
@@ -80,16 +107,18 @@ return (
     <div className="flex-1 p-4 bg-white shadow-md rounded-lg order-1 md:order-2">
       <h2 className="text-2xl font-semibold mb-4">Chat with Us</h2>
       <div className="h-[400px] overflow-y-auto mb-4 p-2 border rounded-md">
-        {chatMessages.map((message, index) => (
-          <div key={index} className="mb-2 p-2 bg-gray-100 rounded-md">
-            {message}
+      {messages.map((message, index) => (
+          <div key={index} className={`mb-4 ${message.role === 'user' ? 'text-right' : 'text-left'}`}>
+            <span className={`inline-block p-2 rounded-lg ${message.role === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`}>
+              {message.content}
+            </span>
           </div>
         ))}
       </div>
       <form onSubmit={handleChatSubmit} className="flex gap-2">
         <Input
-          value={chatMessage}
-          onChange={(e) => setChatMessage(e.target.value)}
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
           placeholder="Type your message here..."
           className="flex-grow"
         />
