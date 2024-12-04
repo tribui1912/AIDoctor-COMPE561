@@ -1,19 +1,20 @@
+'use client'
+
 import Link from 'next/link'
 import { Inter } from 'next/font/google'
+import { usePathname } from 'next/navigation'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
-
-export const metadata = {
-  title: 'City General Hospital',
-  description: 'Providing quality healthcare for our community',
-}
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const pathname = usePathname()
+  const isAdminRoute = pathname?.startsWith('/admin')
+
   return (
     <html lang="en">
       <body className={`${inter.className} flex flex-col min-h-screen`}>

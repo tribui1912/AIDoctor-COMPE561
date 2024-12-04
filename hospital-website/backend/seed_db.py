@@ -1,8 +1,10 @@
+from app.database import SessionLocal, init_db
+from app.models import Admin, NewsArticle, Doctor, User
+from app.password_utils import get_password_hash
 from datetime import datetime, timedelta
-from app.database import SessionLocal
-from app.models import NewsArticle
 from sqlalchemy.exc import SQLAlchemyError
 
+# News articles data
 news_articles = [
     {
         "title": "Breakthrough in Cancer Treatment: New Immunotherapy Shows Promise",
@@ -16,7 +18,10 @@ The study included 100 patients with various forms of aggressive cancer, and the
         "image_url": "https://images.pexels.com/photos/3376790/pexels-photo-3376790.jpeg",
         "date": datetime.utcnow() - timedelta(days=2),
         "status": "published",
-        "admin_id": 1
+        "views_count": 0,
+        "created_at": datetime.utcnow(),
+        "updated_at": datetime.utcnow(),
+        "published_at": datetime.utcnow() - timedelta(days=2)
     },
     {
         "title": "New AI System Detects Early Signs of Alzheimer's",
@@ -28,7 +33,10 @@ The system has already helped identify several cases that might have otherwise g
         "image_url": "https://images.pexels.com/photos/3825586/pexels-photo-3825586.jpeg",
         "date": datetime.utcnow() - timedelta(days=5),
         "status": "published",
-        "admin_id": 1
+        "views_count": 0,
+        "created_at": datetime.utcnow(),
+        "updated_at": datetime.utcnow(),
+        "published_at": datetime.utcnow() - timedelta(days=2)
     },
     {
         "title": "Hospital Launches New Pediatric Wing",
@@ -40,7 +48,10 @@ The new facility includes 50 private rooms, a specialized pediatric ICU, and an 
         "image_url": "https://images.pexels.com/photos/3259624/pexels-photo-3259624.jpeg",
         "date": datetime.utcnow() - timedelta(days=7),
         "status": "published",
-        "admin_id": 1
+        "views_count": 0,
+        "created_at": datetime.utcnow(),
+        "updated_at": datetime.utcnow(),
+        "published_at": datetime.utcnow() - timedelta(days=2)
     },
     {
         "title": "Revolutionary Heart Surgery Technique Developed",
@@ -52,7 +63,10 @@ Initial procedures using this technique have shown excellent outcomes, with pati
         "image_url": "https://images.pexels.com/photos/3376790/pexels-photo-3376790.jpeg",
         "date": datetime.utcnow() - timedelta(days=10),
         "status": "published",
-        "admin_id": 1
+        "views_count": 0,
+        "created_at": datetime.utcnow(),
+        "updated_at": datetime.utcnow(),
+        "published_at": datetime.utcnow() - timedelta(days=2)
     },
     {
         "title": "COVID-19 Long-Term Study Results Released",
@@ -64,7 +78,10 @@ The study highlights the importance of continued monitoring and support for COVI
         "image_url": "https://images.pexels.com/photos/3992933/pexels-photo-3992933.jpeg",
         "date": datetime.utcnow() - timedelta(days=12),
         "status": "published",
-        "admin_id": 1
+        "views_count": 0,
+        "created_at": datetime.utcnow(),
+        "updated_at": datetime.utcnow(),
+        "published_at": datetime.utcnow() - timedelta(days=2)
     },
     {
         "title": "Mental Health Program Expansion",
@@ -76,7 +93,10 @@ The expansion includes new facilities for group therapy, art therapy, and medita
         "image_url": "https://images.pexels.com/photos/4101143/pexels-photo-4101143.jpeg",
         "date": datetime.utcnow() - timedelta(days=15),
         "status": "published",
-        "admin_id": 1
+        "views_count": 0,
+        "created_at": datetime.utcnow(),
+        "updated_at": datetime.utcnow(),
+        "published_at": datetime.utcnow() - timedelta(days=2)
     },
     {
         "title": "Innovative Diabetes Management System Launched",
@@ -88,7 +108,10 @@ The platform has already shown promising results in helping patients maintain be
         "image_url": "https://images.pexels.com/photos/4226119/pexels-photo-4226119.jpeg",
         "date": datetime.utcnow() - timedelta(days=18),
         "status": "published",
-        "admin_id": 1
+        "views_count": 0,
+        "created_at": datetime.utcnow(),
+        "updated_at": datetime.utcnow(),
+        "published_at": datetime.utcnow() - timedelta(days=2)
     },
     {
         "title": "Breakthrough in Pain Management Research",
@@ -100,7 +123,10 @@ The results show significant pain reduction without the risks associated with op
         "image_url": "https://images.pexels.com/photos/4226264/pexels-photo-4226264.jpeg",
         "date": datetime.utcnow() - timedelta(days=20),
         "status": "published",
-        "admin_id": 1
+        "views_count": 0,
+        "created_at": datetime.utcnow(),
+        "updated_at": datetime.utcnow(),
+        "published_at": datetime.utcnow() - timedelta(days=2)
     },
     {
         "title": "Emergency Department Modernization Complete",
@@ -112,7 +138,10 @@ The upgrades are expected to reduce wait times and improve patient care in emerg
         "image_url": "https://images.pexels.com/photos/247786/pexels-photo-247786.jpeg",
         "date": datetime.utcnow() - timedelta(days=22),
         "status": "published",
-        "admin_id": 1
+        "views_count": 0,
+        "created_at": datetime.utcnow(),
+        "updated_at": datetime.utcnow(),
+        "published_at": datetime.utcnow() - timedelta(days=2)
     },
     {
         "title": "Robotic Surgery Milestone Achieved",
@@ -124,28 +153,125 @@ The program has demonstrated excellent outcomes, with patients experiencing shor
         "image_url": "https://images.pexels.com/photos/305566/pexels-photo-305566.jpeg",
         "date": datetime.utcnow() - timedelta(days=25),
         "status": "published",
-        "admin_id": 1
+        "views_count": 0,
+        "created_at": datetime.utcnow(),
+        "updated_at": datetime.utcnow(),
+        "published_at": datetime.utcnow() - timedelta(days=2)
     }
 ]
 
-def populate_news_database():
+def seed_database():
     db = SessionLocal()
     try:
-        # Clear existing articles (optional)
-        db.query(NewsArticle).delete()
-        
-        # Add new articles
-        for article_data in news_articles:
-            article = NewsArticle(**article_data)
-            db.add(article)
-        
+        # Create admin with all required fields
+        admin = Admin(
+            username="admin",
+            email="admin@hospital.com",
+            password_hash=get_password_hash("admin123"),
+            role="admin",
+            permissions={
+                "news": ["create", "read", "update", "delete"],
+                "appointments": ["create", "read", "update", "delete"],
+                "users": ["read", "update", "delete"]
+            },
+            created_at=datetime.utcnow(),
+            updated_at=datetime.utcnow(),
+            last_login=None,
+            is_active=True
+        )
+        db.add(admin)
         db.commit()
-        print("Successfully added test news articles to the database!")
+        db.refresh(admin)
+
+        # Create sample news articles with all required fields
+        for article_data in news_articles:
+            article = NewsArticle(
+                title=article_data["title"],
+                summary=article_data["summary"],
+                content=article_data["content"],
+                category=article_data["category"],
+                image_url=article_data["image_url"],
+                date=article_data["date"],
+                status=article_data["status"],
+                admin_id=admin.id,
+                views_count=article_data["views_count"],
+                created_at=article_data["created_at"],
+                updated_at=article_data["updated_at"],
+                published_at=article_data["published_at"]
+            )
+            db.add(article)
+
+        # Create sample doctors with all required fields
+        doctors = [
+            Doctor(
+                name="Dr. John Smith",
+                specialty="Cardiology",
+                email="john.smith@hospital.com",
+                created_at=datetime.utcnow(),
+                updated_at=datetime.utcnow()
+            ),
+            Doctor(
+                name="Dr. Sarah Johnson",
+                specialty="Pediatrics",
+                email="sarah.johnson@hospital.com",
+                created_at=datetime.utcnow(),
+                updated_at=datetime.utcnow()
+            ),
+            Doctor(
+                name="Dr. Michael Chen",
+                specialty="Neurology",
+                email="michael.chen@hospital.com",
+                created_at=datetime.utcnow(),
+                updated_at=datetime.utcnow()
+            )
+        ]
+        db.add_all(doctors)
+
+        # Create sample users with all required fields
+        users = [
+            User(
+                email="patient1@example.com",
+                name="John Doe",
+                phone="1234567890",
+                hashed_password=get_password_hash("patient123"),
+                email_verified=True,
+                email_verified_at=datetime.utcnow(),
+                created_at=datetime.utcnow(),
+                updated_at=datetime.utcnow(),
+                last_login=None,
+                is_active=True,
+                verification_token=None
+            ),
+            User(
+                email="patient2@example.com",
+                name="Jane Smith",
+                phone="0987654321",
+                hashed_password=get_password_hash("patient123"),
+                email_verified=True,
+                email_verified_at=datetime.utcnow(),
+                created_at=datetime.utcnow(),
+                updated_at=datetime.utcnow(),
+                last_login=None,
+                is_active=True,
+                verification_token=None
+            )
+        ]
+        db.add_all(users)
+
+        db.commit()
+        print("Sample data has been inserted successfully!")
+
     except SQLAlchemyError as e:
+        print(f"Database error occurred: {str(e)}")
         db.rollback()
-        print(f"Error populating database: {e}")
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        db.rollback()
     finally:
         db.close()
 
 if __name__ == "__main__":
-    populate_news_database() 
+    print("Initializing database...")
+    init_db()  # Reset the database
+    print("Seeding database...")
+    seed_database()

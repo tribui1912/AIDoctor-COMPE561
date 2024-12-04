@@ -85,3 +85,7 @@ backend/.env/
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+
+# Pytest
+**/.pytest_cache/
+**/.coverage

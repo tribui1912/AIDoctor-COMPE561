@@ -32,10 +32,20 @@ export default function News() {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/news/')
+        const response = await fetch('http://localhost:8000/api/news', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          credentials: 'include'
+        })
+
         if (!response.ok) {
-          throw new Error(`Failed to fetch news: ${response.statusText}`)
+          const errorData = await response.text()
+          throw new Error(`Failed to fetch news: ${response.status} ${errorData}`)
         }
+
         const data = await response.json()
         setArticles(data)
       } catch (error) {
