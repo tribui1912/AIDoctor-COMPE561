@@ -27,7 +27,6 @@ export default function RootLayout({
               <li><Link href="/location">Locations</Link></li>
               <li><Link href="/news">News</Link></li>
               <li><Link href="/contact">Contact</Link></li>
-              <li><Link href="/ask" className="bg-white text-black px-4 py-2 rounded">Ask</Link></li>
             </ul>
           </nav>
         </header>
