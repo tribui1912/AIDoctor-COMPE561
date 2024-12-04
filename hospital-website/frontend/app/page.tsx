@@ -15,15 +15,15 @@ export default function Home() {
           <p>24/7 emergency care for all your urgent medical needs.</p>
           <Link href="/doctors-services" className="mt-4 inline-block bg-blue-600 text-white px-4 py-2 rounded">Learn More</Link>
         </div>
-        <div className="bg-green-100 p-6 rounded-lg">
+        <div className="bg-blue-100 p-6 rounded-lg">
           <h2 className="text-2xl font-bold mb-4">Specialized Care</h2>
           <p>Expert doctors and advanced treatments in various specialties.</p>
-          <Link href="/doctors-services" className="mt-4 inline-block bg-green-600 text-white px-4 py-2 rounded">Our Services</Link>
+          <Link href="/doctors-services" className="mt-4 inline-block bg-blue-600 text-white px-4 py-2 rounded">Our Services</Link>
         </div>
-        <div className="bg-yellow-100 p-6 rounded-lg">
+        <div className="bg-blue-100 p-6 rounded-lg">
           <h2 className="text-2xl font-bold mb-4">Patient Resources</h2>
           <p>Information for patients and visitors to make your stay comfortable.</p>
-          <Link href="/patients-visitors" className="mt-4 inline-block bg-yellow-600 text-white px-4 py-2 rounded">Patient Info</Link>
+          <Link href="/patients-visitors" className="mt-4 inline-block bg-blue-600 text-white px-4 py-2 rounded">Patient Info</Link>
         </div>
       </section>
 

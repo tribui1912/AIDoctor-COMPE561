@@ -12,12 +12,12 @@ const nextConfig = {
             },
             {
                 protocol: 'https',
-                hostname: 'th-thumbnailer.cdn-si-edu.com',
+                hostname: 's2.r29static.com',
                 pathname: '/**',
             },
             {
                 protocol: 'https',
-                hostname: 'calhospital.org',
+                hostname: 'www.hollywoodreporter.com',
                 pathname: '/**',
             },
             {
@@ -35,8 +35,54 @@ const nextConfig = {
                 hostname: 'images.pexels.com',
                 pathname: '/**',
             },
+            {
+                protocol: 'https',
+                hostname: 'assets-auto.rbl.ms',
+                pathname: '/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'www.bostonmagazine.com',
+                pathname: '/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'www.closerweekly.com',
+                pathname: '/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'static.wikia.nocookie.net',
+                pathname: '/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'hips.hearstapps.com',
+                pathname: '/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'cdn1.edgedatg.com',
+                pathname: '/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'i.ebayimg.com',
+                pathname: '/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'i.pinimg.com',
+                pathname: '/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 't4.ftcdn.net',
+                pathname: '/**',
+            },
         ],
     },
 };
 
 export default nextConfig;
+

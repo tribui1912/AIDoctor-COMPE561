@@ -1,4 +1,7 @@
 import { MapPin, Phone, Mail, Clock } from 'lucide-react'
+import { Button, buttonVariants } from "@/components/ui/button"
+import Link from "next/link"
+
 
 export default function Contact() {
   return (
@@ -64,12 +67,28 @@ export default function Contact() {
           </div>
         </section>
       </div>
+      
+      <h2 className="text-2xl font-semibold mb-4">Find Us </h2>
+    <div className="flex justify-center">
+      <Button
+        asChild
+        variant="outline" 
+        size="xl"
+        className="border-2"
+        text-xl
+      >
+        <Link href="/location">Our Locations</Link>
+      </Button>
+    </div>
+  
 
-      <section className="mt-8">
-        <h2 className="text-2xl font-semibold mb-4">Find Us</h2>
+
+
+      {/* <section className="mt-8">
+    
         <div className="aspect-w-16 aspect-h-9">
           <iframe 
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.2176767606297!2d-73.98823492426385!3d40.748440537541225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c259a9b3117469%3A0xd134e199a405a163!2sEmpire%20State%20Building!5e0!3m2!1sen!2sus!4v1682805705560!5m2!1sen!2sus" 
+            src="https://www.google.com/maps/embed/v1/place?q=San+diego+state+university&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8" 
             width="600" 
             height="450" 
             style={{border:0}} 
@@ -79,7 +98,13 @@ export default function Contact() {
             className="w-full rounded-lg shadow-md"
           ></iframe>
         </div>
-      </section>
-    </div>
+      </section> */}
+      
+
+
+  
+
+
+    </div> 
   )
 }
