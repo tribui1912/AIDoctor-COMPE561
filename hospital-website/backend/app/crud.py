@@ -8,6 +8,7 @@ import secrets
 from typing import Optional
 from sqlalchemy.sql import func
 from .password_utils import get_password_hash, verify_password
+from .auth_utils import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token
 
 def get_news_articles(db: Session, skip: int = 0, limit: int = 100):
     try:
@@ -18,15 +19,15 @@ def get_news_articles(db: Session, skip: int = 0, limit: int = 100):
             detail=f"Database error: {str(e)}"
         )
 
-def get_news_article(db: Session, article_id: int):
+def get_news_article(db: Session, article_id: int, increment_views: bool = False):
     try:
         article = db.query(models.NewsArticle).filter(
             models.NewsArticle.id == article_id,
             models.NewsArticle.status == "published"  # Only show published articles
         ).first()
         
-        if article:
-            # Increment views count
+        if article and increment_views:
+            # Increment views count only if explicitly requested
             article.views_count += 1
             db.commit()
             
@@ -52,12 +53,12 @@ def create_news_article(db: Session, article: schemas.NewsArticleCreate, admin_i
             detail=f"Failed to create article: {str(e)}"
         )
 
-def update_news_article(db: Session, article_id: int, article: schemas.NewsArticleCreate):
+def update_news_article(db: Session, article_id: int, article: dict):
     db_article = get_news_article(db, article_id)
     if not db_article:
         raise HTTPException(status_code=404, detail="Article not found")
     
-    for key, value in article.dict().items():
+    for key, value in article.items():
         setattr(db_article, key, value)
     
     db_article.updated_at = datetime.utcnow()
@@ -83,7 +84,9 @@ def create_user(db: Session, user: schemas.UserCreate):
         email=user.email,
         name=user.name,
         phone=user.phone,
-        hashed_password=hashed_password
+        hashed_password=hashed_password,
+        role=user.role,
+        status=user.status
     )
     db.add(db_user)
     db.commit()
@@ -218,24 +221,19 @@ def create_admin_access_token(admin_id: int):
 def get_news_articles_count(db: Session):
     return db.query(models.NewsArticle).count()
 
-def update_admin(db: Session, admin_id: int, admin_update: schemas.AdminUpdate):
-    db_admin = db.query(models.Admin).filter(models.Admin.id == admin_id).first()
-    if not db_admin:
-        raise HTTPException(status_code=404, detail="Admin not found")
-    
-    update_data = admin_update.dict(exclude_unset=True)
-    if "password" in update_data:
-        update_data["password_hash"] = bcrypt.hashpw(
-            update_data.pop("password").encode('utf-8'),
-            bcrypt.gensalt()
-        ).decode('utf-8')
-    
-    for key, value in update_data.items():
-        setattr(db_admin, key, value)
-    
-    db.commit()
-    db.refresh(db_admin)
-    return db_admin
+def update_admin(db: Session, admin_id: int, update_data: dict):
+    try:
+        db_admin = get_admin_by_id(db, admin_id)
+        if db_admin:
+            for key, value in update_data.items():
+                setattr(db_admin, key, value)
+            db.commit()
+            db.refresh(db_admin)
+        return db_admin
+    except Exception as e:
+        print(f"Error in update_admin: {str(e)}")
+        db.rollback()
+        raise e
 
 def get_news_categories(db: Session):
     return db.query(models.NewsArticle.category).distinct().all()
@@ -313,3 +311,57 @@ def get_user_appointments(db: Session, user_id: int):
     return db.query(models.Appointment)\
              .filter(models.Appointment.user_id == user_id)\
              .all()
+
+def get_users(db: Session, skip: int = 0, limit: int = 100):
+    """Get all users including admins"""
+    # Get regular users
+    users = db.query(models.User).offset(skip).limit(limit).all()
+    
+    # Get admin users
+    admins = db.query(models.Admin).all()
+    
+    # Return combined list of model instances
+    return users + admins
+
+def delete_user(db: Session, user_id: int):
+    """Delete a user or admin"""
+    # Try to find and delete user
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if user:
+        db.delete(user)
+        db.commit()
+        return True
+
+    # If not found, try to find and delete admin
+    admin = db.query(models.Admin).filter(models.Admin.id == user_id).first()
+    if admin:
+        # Prevent deleting the last admin
+        admin_count = db.query(models.Admin).count()
+        if admin_count <= 1:
+            raise HTTPException(
+                status_code=400,
+                detail="Cannot delete the last admin user"
+            )
+        db.delete(admin)
+        db.commit()
+        return True
+
+    raise HTTPException(
+        status_code=404,
+        detail="User not found"
+    )
+
+def get_user(db: Session, user_id: int):
+    return db.query(models.User).filter(models.User.id == user_id).first()
+
+def update_user(db: Session, user_id: int, update_data: dict):
+    db_user = get_user(db, user_id)
+    if db_user:
+        for key, value in update_data.items():
+            setattr(db_user, key, value)
+        db.commit()
+        db.refresh(db_user)
+    return db_user
+
+def get_admin_by_email(db: Session, email: str):
+    return db.query(models.Admin).filter(models.Admin.email == email).first()
