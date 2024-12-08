@@ -20,6 +20,9 @@ export default function RootLayout({
   if (isAdminRoute) {
     return (
       <html lang="en">
+        <head>
+          <title>Admin Dashboard - City General Hospital</title>
+        </head>
         <body className={inter.className}>
           {children}
         </body>
@@ -29,6 +32,9 @@ export default function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <title>City General Hospital</title>
+      </head>
       <body className={`${inter.className} flex flex-col min-h-screen`}>
         <ThemeProvider
           attribute="class"
