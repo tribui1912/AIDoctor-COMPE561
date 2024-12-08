@@ -53,14 +53,20 @@ import {
       e.preventDefault();
       try {
         const token = getCookie('adminToken');
+        console.log('Admin Token:', token);
         if (!token) {
           throw new Error('No admin token found');
         }
 
-        const endpoint = `http://localhost:8000/api/admin/news/${article?.id}`;
-        
+        const isEditing = !!article?.id;
+        const endpoint = isEditing 
+          ? `http://localhost:8000/api/admin/news/${article.id}`
+          : `http://localhost:8000/api/admin/news`;
+
+        const method = isEditing ? 'PUT' : 'POST';
+
         const response = await fetch(endpoint, {
-          method: 'PUT',
+          method,
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`

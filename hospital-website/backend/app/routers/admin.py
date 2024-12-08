@@ -79,7 +79,9 @@ async def create_news_article(
     db: Session = Depends(get_db),
     current_admin: models.Admin = Depends(get_current_admin)
 ):
-    return crud.create_news_article(db, article, current_admin.id)
+    db_article = crud.create_news_article(db, article, current_admin.id)
+    # Convert the SQLAlchemy model instance to a Pydantic model
+    return schemas.NewsArticle.from_orm(db_article)
 
 @router.put("/news/{article_id}", response_model=schemas.AdminNewsArticle)
 async def update_article(

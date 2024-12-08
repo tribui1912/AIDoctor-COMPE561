@@ -75,7 +75,7 @@ export default function Contact() {
         variant="outline" 
         size="xl"
         className="border-2"
-        text-xl
+        text-xl="true"
       >
         <Link href="/location">Our Locations</Link>
       </Button>
