@@ -13,7 +13,7 @@ class NewsArticleBase(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 class NewsArticleCreate(NewsArticleBase):
-    pass
+    date: Optional[datetime] = None
 
 class NewsArticle(NewsArticleBase):
     id: int
@@ -121,16 +121,14 @@ class LoginResponse(BaseModel):
 class AppointmentBase(BaseModel):
     date: datetime
     reason: str
-    status: str = Field(..., description="Status of the appointment", 
-                       pattern="^(pending|confirmed|cancelled|completed)$")
+    status: str = "pending"
     additional_notes: Optional[str] = None
-
+    user_id: Optional[int] = None
+    
     model_config = ConfigDict(from_attributes=True)
 
 class AppointmentCreate(AppointmentBase):
-    user_id: int
-
-    model_config = ConfigDict(from_attributes=True)
+    pass
 
 class AppointmentUpdate(BaseModel):
     date: Optional[datetime] = None
@@ -142,12 +140,7 @@ class AppointmentUpdate(BaseModel):
 
 class Appointment(AppointmentBase):
     id: int
-    user_id: int
-    doctor_id: Optional[int] = None
     created_at: datetime
-    updated_at: datetime
-
-    model_config = ConfigDict(from_attributes=True)
 
 class AdminLogin(BaseModel):
     username: str
@@ -195,11 +188,11 @@ class NewsArticleUpdate(BaseModel):
     category: Optional[str] = None
     image_url: Optional[str] = None
     status: Optional[str] = None
-    
+
     model_config = ConfigDict(from_attributes=True)
 
-    def dict(self, *args, **kwargs):
-        return self.model_dump(*args, **kwargs)
+    def model_dump(self, *args, **kwargs):
+        return super().dict(*args, **kwargs)
 
 class AdminStatistics(BaseModel):
     totalUsers: int

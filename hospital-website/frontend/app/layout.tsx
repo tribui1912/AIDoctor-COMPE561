@@ -15,13 +15,31 @@ export default function RootLayout({
   const pathname = usePathname()
   const isAdminRoute = pathname?.startsWith('/admin')
 
+  if (isAdminRoute) {
+    return (
+      <html lang="en">
+        <body className={inter.className}>
+          {children}
+        </body>
+      </html>
+    )
+  }
+
   return (
     <html lang="en">
+      <head>
+        <title>{isAdminRoute ? 'C.G Hospital - Admin' : 'City General Hospital'}</title>
+        <link rel="icon" href="/favicon.ico" />
+      </head>
       <body className={`${inter.className} flex flex-col min-h-screen`}>
         <header className="bg-blue-200 text-black sticky top-0 z-50">
           <nav className="container mx-auto px-4 py-4">
             <ul className="flex flex-wrap justify-between items-center">
-              <li><Link href="/" className="text-2xl font-bold">City General Hospital</Link></li>
+              <li>
+                <Link href="/" className="text-2xl font-bold">
+                  City General Hospital
+                </Link>
+              </li>
               <li><Link href="/about">About</Link></li>
               <li><Link href="/doctors-services">Doctors & Services</Link></li>
               <li><Link href="/patients-visitors">Patients & Visitors</Link></li>

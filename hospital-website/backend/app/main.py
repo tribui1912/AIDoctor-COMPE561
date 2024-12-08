@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from app.middleware.middleware import setup_middlewares
-from app.routers import news, auth, appointments, admin
+from app.routers import news, auth, appointments, admin, chat
 from app.database import engine
 from app import models
 
@@ -17,7 +17,7 @@ app.include_router(news.router)
 app.include_router(auth.router)
 app.include_router(appointments.router)
 app.include_router(admin.router)
-
+app.include_router(chat.router, prefix="/api")
 @app.get("/")
 def read_root():
     return {"message": "Welcome to City General Hospital API"}

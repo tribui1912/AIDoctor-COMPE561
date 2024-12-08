@@ -41,7 +41,14 @@ def get_news_article(db: Session, article_id: int, increment_views: bool = False
 
 def create_news_article(db: Session, article: schemas.NewsArticleCreate, admin_id: int):
     try:
-        db_article = models.NewsArticle(**article.dict(), admin_id=admin_id)
+        # Use the dict method to get a dictionary of the fields
+        valid_fields = {key: value for key, value in article.dict().items() if key in models.NewsArticle.__table__.columns}
+        
+        # Set the date to the current datetime if not provided
+        if 'date' not in valid_fields or valid_fields['date'] is None:
+            valid_fields['date'] = datetime.utcnow()
+        
+        db_article = models.NewsArticle(**valid_fields, admin_id=admin_id)
         db.add(db_article)
         db.commit()
         db.refresh(db_article)
@@ -156,7 +163,16 @@ def revoke_refresh_token(db: Session, token: str):
 
 def create_appointment(db: Session, appointment: schemas.AppointmentCreate):
     """Create a new appointment"""
-    db_appointment = models.Appointment(**appointment.model_dump())
+    # Convert Pydantic model to dict and exclude any SQLAlchemy-incompatible fields
+    if hasattr(appointment, 'dict'):
+        # Pydantic v1
+        appointment_data = appointment.dict(exclude_unset=True)
+    else:
+        # Pydantic v2
+        appointment_data = appointment.model_dump(exclude_unset=True, exclude={'model_config'})
+    
+    # Create new appointment
+    db_appointment = models.Appointment(**appointment_data)
     db.add(db_appointment)
     db.commit()
     db.refresh(db_appointment)

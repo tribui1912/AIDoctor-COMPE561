@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Text, DateTime, Boolean, ForeignKey, JSON
 from sqlalchemy.orm import relationship
 from datetime import datetime
+from sqlalchemy.sql import func
 from .database import Base
 
 class NewsArticle(Base):
@@ -132,10 +133,7 @@ class Appointment(Base):
     reason = Column(String, nullable=False)
     status = Column(String, default="pending")
     additional_notes = Column(Text, nullable=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    doctor_id = Column(Integer, ForeignKey("doctors.id"), nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    created_at = Column(DateTime, server_default=func.now())
 
     user = relationship("User", back_populates="appointments")
-    doctor = relationship("Doctor", back_populates="appointments")

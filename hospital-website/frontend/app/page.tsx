@@ -13,7 +13,7 @@ export default function Home() {
         <div className="bg-blue-100 p-6 rounded-lg">
           <h2 className="text-2xl font-bold mb-4">Emergency Services</h2>
           <p>24/7 emergency care for all your urgent medical needs.</p>
-          <Link href="/doctors-services" className="mt-4 inline-block bg-blue-600 text-white px-4 py-2 rounded">Learn More</Link>
+          <Link href="/location" className="mt-4 inline-block bg-blue-600 text-white px-4 py-2 rounded">Learn More</Link>
         </div>
         <div className="bg-blue-100 p-6 rounded-lg">
           <h2 className="text-2xl font-bold mb-4">Specialized Care</h2>
@@ -46,7 +46,7 @@ export default function Home() {
       <section className="mt-8 text-center">
         <h2 className="text-3xl font-bold mb-4">Have a Question?</h2>
         <p className="mb-4">Our AI assistant is here to help you 24/7.</p>
-        <Link href="/ask" className="bg-blue-600 text-white px-6 py-3 rounded-lg text-lg">Ask Now</Link>
+        <Link href="/patients-visitors" className="bg-blue-600 text-white px-6 py-3 rounded-lg text-lg">Ask Now</Link>
       </section>
     </div>
   )
