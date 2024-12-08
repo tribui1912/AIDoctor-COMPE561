@@ -46,16 +46,16 @@ export default function About() {
       <main className="container mx-auto px-4 py-12 space-y-12">
         {/* Mission Section */}
         <motion.section 
-          className="grid md:grid-cols-2 gap-8 items-center"
+          className="grid md:grid-cols-2 gap-8 items-stretch"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <Card>
+          <Card className="bg-blue-600/10 border-blue-600/20 hover:bg-blue-600/20 transition-all duration-300 h-full">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Heart className="h-6 w-6 text-primary" />
+              <CardTitle className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
+                <Heart className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                 Our Mission
               </CardTitle>
             </CardHeader>
@@ -65,10 +65,10 @@ export default function About() {
               </p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="bg-blue-600/10 border-blue-600/20 hover:bg-blue-600/20 transition-all duration-300 h-full">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <History className="h-6 w-6 text-primary" />
+              <CardTitle className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
+                <History className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                 Our History
               </CardTitle>
             </CardHeader>
@@ -88,8 +88,8 @@ export default function About() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-3xl font-bold tracking-tight flex items-center gap-2">
-            <ListChecks className="h-8 w-8 text-primary" />
+          <h2 className="text-3xl font-bold tracking-tight flex items-center gap-2 text-blue-600 dark:text-blue-400">
+            <ListChecks className="h-8 w-8 text-blue-600 dark:text-blue-400" />
             Our Values
           </h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -99,16 +99,12 @@ export default function About() {
               { icon: Brain, title: "Innovation", desc: "We embrace cutting-edge technologies and procedures to improve patient outcomes." },
               { icon: HandHeart, title: "Integrity", desc: "We uphold the highest ethical standards in all our practices." },
               { icon: Users, title: "Collaboration", desc: "We foster a team-based approach to provide comprehensive care." },
-              {
-                icon: Activity,
-                title: "Quality",
-                desc: "We are committed to providing high-quality care through our commitment to ongoing improvement and innovation."
-              }
+              { icon: Activity, title: "Quality", desc: "We are committed to providing high-quality care through our commitment to ongoing improvement and innovation." }
             ].map((value, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow">
+              <Card key={index} className="bg-blue-600/10 border-blue-600/20 hover:bg-blue-600/20 transition-all duration-300">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <value.icon className="h-5 w-5 text-primary" />
+                  <CardTitle className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
+                    <value.icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                     {value.title}
                   </CardTitle>
                 </CardHeader>
@@ -128,8 +124,8 @@ export default function About() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-3xl font-bold tracking-tight flex items-center gap-2">
-            <Building2 className="h-8 w-8 text-primary" />
+          <h2 className="text-3xl font-bold tracking-tight flex items-center gap-2 text-blue-600 dark:text-blue-400">
+            <Building2 className="h-8 w-8 text-blue-600 dark:text-blue-400" />
             Our Facilities
           </h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -141,10 +137,10 @@ export default function About() {
               { icon: Heart, title: "Women's Health Center", desc: "Dedicated center with maternity ward" },
               { icon: Baby, title: "Pediatric Wing", desc: "Specially designed for our youngest patients" }
             ].map((facility, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow">
+              <Card key={index} className="bg-blue-600/10 border-blue-600/20 hover:bg-blue-600/20 transition-all duration-300">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <facility.icon className="h-5 w-5 text-primary" />
+                  <CardTitle className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
+                    <facility.icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                     {facility.title}
                   </CardTitle>
                 </CardHeader>
@@ -164,10 +160,10 @@ export default function About() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <Card>
+          <Card className="bg-blue-600/10 border-blue-600/20 hover:bg-blue-600/20 transition-all duration-300">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Users className="h-6 w-6 text-primary" />
+              <CardTitle className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
+                <Users className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                 Community Involvement
               </CardTitle>
             </CardHeader>
