@@ -78,34 +78,71 @@ export default function News() {
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {articles.map((article) => (
-          <Card key={article.id} className="shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden rounded-t-lg">
-            <Image src={article.image_url} alt={article.title} width={400} height={200} className="w-full h-48 object-cover" />
+          <Card 
+            key={article.id} 
+            className="bg-blue-600/10 border-blue-600/20 hover:bg-blue-600/20 
+              transition-all duration-300 ease-in-out
+              hover:border-blue-600/30 
+              hover:shadow-lg hover:-translate-y-0.5
+              hover:scale-[1.02]
+              overflow-hidden rounded-lg"
+          >
+            <Image 
+              src={article.image_url} 
+              alt={article.title} 
+              width={400} 
+              height={200} 
+              className="w-full h-48 object-cover" 
+            />
             <CardHeader>
-              <CardTitle>{article.title}</CardTitle>
-              <CardDescription className="italic">
+              <CardTitle className="text-blue-600 dark:text-blue-400">{article.title}</CardTitle>
+              <CardDescription className="italic text-muted-foreground">
                 {formatDate(article.date)} - {article.category}
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="mb-4">{article.summary}</p>
-              <Button className="bg-blue-200 text-black hover:bg-blue-300" onClick={() => handleReadMore(article.id)}>Read More</Button>
+              <p className="mb-4 text-muted-foreground">{article.summary}</p>
+              <Button 
+                className="bg-blue-600/20 text-blue-600 dark:text-blue-400 hover:bg-blue-600/30 border border-blue-600/20" 
+                onClick={() => handleReadMore(article.id)}
+              >
+                Read More
+              </Button>
             </CardContent>
           </Card>
         ))}
       </div>
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="sm:max-w-[700px] max-h-[80vh] overflow-y-auto">
+        <DialogContent 
+          className="sm:max-w-[700px] max-h-[80vh] overflow-y-auto 
+            fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]
+            w-[90vw]
+            bg-white dark:bg-slate-950 border border-blue-600/20
+            shadow-lg"
+        >
           <DialogHeader>
-            <DialogTitle>{selectedArticle?.title}</DialogTitle>
-            <DialogDescription className="italic">
+            <DialogTitle className="text-blue-600 dark:text-blue-400">
+              {selectedArticle?.title}
+            </DialogTitle>
+            <DialogDescription className="italic text-muted-foreground">
               {formatDate(selectedArticle?.date || '')} - {selectedArticle?.category}
             </DialogDescription>
           </DialogHeader>
           <div className="mt-4">
-            <Image src={selectedArticle?.image_url || ''} alt={selectedArticle?.title || ''} width={600} height={300} className="w-full h-64 object-cover mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Full Article</h3>
-            <p className="whitespace-pre-wrap">{selectedArticle?.content}</p>
+            <Image 
+              src={selectedArticle?.image_url || ''} 
+              alt={selectedArticle?.title || ''} 
+              width={600} 
+              height={300} 
+              className="w-full h-64 object-cover mb-4 rounded-lg" 
+            />
+            <h3 className="text-lg font-semibold mb-2 text-blue-600 dark:text-blue-400">
+              Full Article
+            </h3>
+            <p className="whitespace-pre-wrap text-foreground">
+              {selectedArticle?.content}
+            </p>
           </div>
         </DialogContent>
       </Dialog>
