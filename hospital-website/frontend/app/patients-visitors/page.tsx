@@ -267,18 +267,18 @@ return (
                   </div>
 
                   <div className="p-4 bg-blue-600/10 border border-blue-600/20 shadow-md rounded-lg hover:bg-blue-600/20 transition-colors">
-                    <h3 className="font-semibold text-blue-600 dark:text-blue-400">I'm experiencing chest pain. Should I be worried?</h3>
-                    <p className="text-sm text-muted-foreground mt-2">Chest pain can be a sign of a heart problem, such as angina or a heart attack, but it could also be caused by less serious issues like muscle strain, acid reflux, or anxiety. It's important to see a doctor immediately if the pain is severe, lasts longer than a few minutes, or is accompanied by shortness of breath, nausea, or sweating.</p>
+                    <h3 className="font-semibold text-blue-600 dark:text-blue-400">I&apos;m experiencing chest pain. Should I be worried?</h3>
+                    <p className="text-sm text-muted-foreground mt-2">Chest pain can be a sign of a heart problem, such as angina or a heart attack, but it could also be caused by less serious issues like muscle strain, acid reflux, or anxiety. It&apos;s important to see a doctor immediately if the pain is severe, lasts longer than a few minutes, or is accompanied by shortness of breath, nausea, or sweating.</p>
                   </div>
 
                   <div className="p-4 bg-blue-600/10 border border-blue-600/20 shadow-md rounded-lg hover:bg-blue-600/20 transition-colors">
-                    <h3 className="font-semibold text-blue-600 dark:text-blue-400">I have a headache that won't go away. What could it be?</h3>
+                    <h3 className="font-semibold text-blue-600 dark:text-blue-400">I have a headache that won&apos;t go away. What could it be?</h3>
                     <p className="text-sm text-muted-foreground mt-2">A persistent headache could be due to tension, migraines, or even sinus issues. However, if the headache is very severe, sudden, or accompanied by other symptoms like vision changes or vomiting, it could be a sign of something more serious like a brain injury or a stroke. Your doctor will help determine the cause based on your symptoms and medical history.</p>
                   </div>
 
                   <div className="p-4 bg-blue-600/10 border border-blue-600/20 shadow-md rounded-lg hover:bg-blue-600/20 transition-colors">
                     <h3 className="font-semibold text-blue-600 dark:text-blue-400">Why am I feeling lightheaded or dizzy?</h3>
-                    <p className="text-sm text-muted-foreground mt-2">Dizziness can be caused by a variety of factors such as dehydration, low blood pressure, ear infections, anxiety, or even a side effect of medications. If you feel dizzy regularly or if it's accompanied by fainting, vision changes, or difficulty walking, you should see a doctor for further evaluation.</p>
+                    <p className="text-sm text-muted-foreground mt-2">Dizziness can be caused by a variety of factors such as dehydration, low blood pressure, ear infections, anxiety, or even a side effect of medications. If you feel dizzy regularly or if it&apos;s accompanied by fainting, vision changes, or difficulty walking, you should see a doctor for further evaluation.</p>
                   </div>
 
                   <div className="p-4 bg-blue-600/10 border border-blue-600/20 shadow-md rounded-lg hover:bg-blue-600/20 transition-colors">
@@ -288,22 +288,22 @@ return (
 
                   <div className="p-4 bg-blue-600/10 border border-blue-600/20 shadow-md rounded-lg hover:bg-blue-600/20 transition-colors">
                     <h3 className="font-semibold text-blue-600 dark:text-blue-400">Why do I have frequent urination?</h3>
-                    <p className="text-sm text-muted-foreground mt-2">Frequent urination can be a symptom of a urinary tract infection (UTI), diabetes, or prostate issues in men. It can also occur if you're drinking more fluids than usual or consuming diuretics like caffeine. If it's persistent or accompanied by pain, blood in the urine, or a burning sensation, it's important to visit a doctor.</p>
+                    <p className="text-sm text-muted-foreground mt-2">Frequent urination can be a symptom of a urinary tract infection (UTI), diabetes, or prostate issues in men. It can also occur if you&apos;re drinking more fluids than usual or consuming diuretics like caffeine. If it&apos;s persistent or accompanied by pain, blood in the urine, or a burning sensation, it&apos;s important to visit a doctor.</p>
                   </div>
 
                   <div className="p-4 bg-blue-600/10 border border-blue-600/20 shadow-md rounded-lg hover:bg-blue-600/20 transition-colors">
-                    <h3 className="font-semibold text-blue-600 dark:text-blue-400">I'm having trouble sleeping. What could be the cause?</h3>
-                    <p className="text-sm text-muted-foreground mt-2">Excessive thirst can be a sign of dehydration, diabetes, or an electrolyte imbalance. If it's happening regularly or if you're also experiencing frequent urination, fatigue, or blurry vision, it's important to consult a doctor to rule out conditions like diabetes.</p>
-                  </div>
-
-                  <div className="p-4 bg-blue-600/10 border border-blue-600/20 shadow-md rounded-lg hover:bg-blue-600/20 transition-colors">
-                    <h3 className="font-semibold text-blue-600 dark:text-blue-400">Why am I always feeling thirsty?</h3>
+                    <h3 className="font-semibold text-blue-600 dark:text-blue-400">I&apos;m having trouble sleeping. What could be the cause?</h3>
                     <p className="text-sm text-muted-foreground mt-2">Trouble sleeping, or insomnia, can be caused by stress, anxiety, caffeine intake, sleep apnea, or other underlying health conditions. If poor sleep persists, it can affect your health, so your doctor may ask about your sleep habits, lifestyle, and may recommend a sleep study or relaxation techniques.</p>
                   </div>
 
                   <div className="p-4 bg-blue-600/10 border border-blue-600/20 shadow-md rounded-lg hover:bg-blue-600/20 transition-colors">
+                    <h3 className="font-semibold text-blue-600 dark:text-blue-400">I&apos;m always feeling thirsty. What could be the cause?</h3>
+                    <p className="text-sm text-muted-foreground mt-2">Excessive thirst can be a sign of dehydration, diabetes, or an electrolyte imbalance. If it&apos;s happening regularly or if you&apos;re also experiencing frequent urination, fatigue, or blurry vision, it&apos;s important to consult a doctor to rule out conditions like diabetes.</p>
+                  </div>
+
+                  <div className="p-4 bg-blue-600/10 border border-blue-600/20 shadow-md rounded-lg hover:bg-blue-600/20 transition-colors">
                     <h3 className="font-semibold text-blue-600 dark:text-blue-400">I have unexplained weight loss. Should I be concerned?</h3>
-                    <p className="text-sm text-muted-foreground mt-2">Unintentional weight loss can be caused by a variety of factors including thyroid issues, diabetes, cancer, or digestive problems. If you're losing weight without trying, it's important to visit a doctor for an evaluation to rule out any serious conditions.</p>
+                    <p className="text-sm text-muted-foreground mt-2">Unintentional weight loss can be caused by a variety of factors including thyroid issues, diabetes, cancer, or digestive problems. If you&apos;re losing weight without trying, it&apos;s important to visit a doctor for an evaluation to rule out any serious conditions.</p>
                   </div>
 
                   <div className="p-4 bg-blue-600/10 border border-blue-600/20 shadow-md rounded-lg hover:bg-blue-600/20 transition-colors">

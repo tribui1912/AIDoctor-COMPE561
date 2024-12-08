@@ -2,7 +2,6 @@
 import Image from 'next/image'
 import React, { useCallback, useEffect, useState } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default function DoctorsServices() {
   const doctors = [
