@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Table,
@@ -35,13 +35,13 @@ export default function ArticlesPage() {
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
 
-  useEffect(() => {
-    fetchArticles()
-  }, [])
-
-  const fetchArticles = async () => {
+  const fetchArticles = useCallback(async () => {
     try {
       setLoading(true)
+
+  useEffect(() => {
+    fetchArticles()
+  }, [fetchArticles])
       setError(null)
       
       const adminToken = getCookie('adminToken')
@@ -91,7 +91,7 @@ export default function ArticlesPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [router])
 
   if (loading) {
     return (

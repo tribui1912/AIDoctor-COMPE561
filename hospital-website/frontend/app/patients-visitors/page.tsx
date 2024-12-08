@@ -211,7 +211,7 @@ return (
         </div>
 
         <div className="w-full max-w-6xl flex flex-col gap-4">
-          <div className="flex-1 p-4 bg-white shadow-md rounded-lg">
+          <div className="flex-1 p-4 bg-card border border-blue-600/20 shadow-md rounded-lg">
             <h2 className="text-2xl font-semibold mb-4">Chat with Us</h2>
             <div className="h-[500px] overflow-y-auto mb-4 p-2 border rounded-md">
               {messages.map((message, index) => (
@@ -220,18 +220,18 @@ return (
                   className={`mb-4 ${message.role === 'user' ? 'text-right' : 'text-left'}`}
                 >
                   <div 
-                    className={`inline-block p-4 rounded-lg ${
+                    className={`inline-block p-4 rounded-lg border ${
                       message.role === 'user' 
-                        ? 'bg-blue-500 text-white' 
-                        : 'bg-gray-200 text-black'
+                        ? 'bg-blue-600/10 border-blue-600/20 text-blue-600 dark:text-blue-400 max-w-[80%] ml-auto hover:bg-blue-600/20 transition-colors' 
+                        : 'bg-secondary text-secondary-foreground border-secondary/50 max-w-[80%] hover:bg-secondary/70 transition-colors'
                     }`}
                   >
                     {message.role === 'user' ? (
-                      message.content
+                      <div className="text-sm">{message.content}</div>
                     ) : (
                       <div 
                         dangerouslySetInnerHTML={{ __html: formatMessage(message.content) }}
-                        className="space-y-2"
+                        className="space-y-2 text-sm"
                       />
                     )}
                   </div>
@@ -244,62 +244,77 @@ return (
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Type your message here..."
-                className="flex-grow"
+                className="flex-grow border-blue-600/20"
               />
-              <Button type="submit">Send</Button>
+              <Button 
+                type="submit" 
+                disabled={isLoading}
+                className="bg-blue-600/20 text-blue-600 dark:text-blue-400 hover:bg-blue-600/30 border border-blue-600/20"
+              >
+                {isLoading ? 'Sending...' : 'Send'}
+              </Button>
             </form>
           </div>
 
           <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1 p-4 bg-white shadow-md rounded-lg">
+            <div className="flex-1 p-4 bg-card border border-blue-600/20 shadow-md rounded-lg">
               <h2 className="text-2xl font-semibold mb-4">Frequently Asked Questions</h2>
               <div className="h-[400px] overflow-y-auto p-2 border rounded-md">
                 <div className="space-y-4">
-                  <div className="p-4 bg-gray-100 shadow-md rounded-lg">
-                    <h3 className="font-semibold">I have a persistent cough. What could be causing it?</h3>
-                    <p className="text-sm">A persistent cough could be caused by several things, including a viral infection (like the common cold or flu), allergies, asthma, or even acid reflux. If the cough lasts for more than a couple of weeks or is accompanied by other symptoms like fever, difficulty breathing, or chest pain, your doctor may suggest further tests.</p>
+                  <div className="p-4 bg-blue-600/10 border border-blue-600/20 shadow-md rounded-lg hover:bg-blue-600/20 transition-colors">
+                    <h3 className="font-semibold text-blue-600 dark:text-blue-400">I have a persistent cough. What could be causing it?</h3>
+                    <p className="text-sm text-muted-foreground mt-2">A persistent cough could be caused by several things, including a viral infection (like the common cold or flu), allergies, asthma, or even acid reflux. If the cough lasts for more than a couple of weeks or is accompanied by other symptoms like fever, difficulty breathing, or chest pain, your doctor may suggest further tests.</p>
                   </div>
-                  <div className="p-4 bg-gray-100 shadow-md rounded-lg">
-                    <h3 className="font-semibold">I’m experiencing chest pain. Should I be worried?</h3>
-                    <p className="text-sm">Chest pain can be a sign of a heart problem, such as angina or a heart attack, but it could also be caused by less serious issues like muscle strain, acid reflux, or anxiety. It's important to see a doctor immediately if the pain is severe, lasts longer than a few minutes, or is accompanied by shortness of breath, nausea, or sweating.</p>
+
+                  <div className="p-4 bg-blue-600/10 border border-blue-600/20 shadow-md rounded-lg hover:bg-blue-600/20 transition-colors">
+                    <h3 className="font-semibold text-blue-600 dark:text-blue-400">I&apos;m experiencing chest pain. Should I be worried?</h3>
+                    <p className="text-sm text-muted-foreground mt-2">Chest pain can be a sign of a heart problem, such as angina or a heart attack, but it could also be caused by less serious issues like muscle strain, acid reflux, or anxiety. It&apos;s important to see a doctor immediately if the pain is severe, lasts longer than a few minutes, or is accompanied by shortness of breath, nausea, or sweating.</p>
                   </div>
-                  <div className="p-4 bg-gray-100 shadow-md rounded-lg">
-                    <h3 className="font-semibold">I have a headache that won’t go away. What could it be?</h3>
-                    <p className="text-sm">A persistent headache could be due to tension, migraines, or even sinus issues. However, if the headache is very severe, sudden, or accompanied by other symptoms like vision changes or vomiting, it could be a sign of something more serious like a brain injury or a stroke. Your doctor will help determine the cause based on your symptoms and medical history.</p>
+
+                  <div className="p-4 bg-blue-600/10 border border-blue-600/20 shadow-md rounded-lg hover:bg-blue-600/20 transition-colors">
+                    <h3 className="font-semibold text-blue-600 dark:text-blue-400">I have a headache that won&apos;t go away. What could it be?</h3>
+                    <p className="text-sm text-muted-foreground mt-2">A persistent headache could be due to tension, migraines, or even sinus issues. However, if the headache is very severe, sudden, or accompanied by other symptoms like vision changes or vomiting, it could be a sign of something more serious like a brain injury or a stroke. Your doctor will help determine the cause based on your symptoms and medical history.</p>
                   </div>
-                  <div className="p-4 bg-gray-100 shadow-md rounded-lg">
-                    <h3 className="font-semibold">Why am I feeling lightheaded or dizzy?</h3>
-                    <p className="text-sm">Dizziness can be caused by a variety of factors such as dehydration, low blood pressure, ear infections, anxiety, or even a side effect of medications. If you feel dizzy regularly or if it's accompanied by fainting, vision changes, or difficulty walking, you should see a doctor for further evaluation.</p>
+
+                  <div className="p-4 bg-blue-600/10 border border-blue-600/20 shadow-md rounded-lg hover:bg-blue-600/20 transition-colors">
+                    <h3 className="font-semibold text-blue-600 dark:text-blue-400">Why am I feeling lightheaded or dizzy?</h3>
+                    <p className="text-sm text-muted-foreground mt-2">Dizziness can be caused by a variety of factors such as dehydration, low blood pressure, ear infections, anxiety, or even a side effect of medications. If you feel dizzy regularly or if it&apos;s accompanied by fainting, vision changes, or difficulty walking, you should see a doctor for further evaluation.</p>
                   </div>
-                  <div className="p-4 bg-gray-100 shadow-md rounded-lg">
-                    <h3 className="font-semibold">I have stomach pain and bloating. What should I do?</h3>
-                    <p className="text-sm">Stomach pain and bloating can be caused by digestive issues like gas, constipation, food intolerances (like lactose or gluten), or more serious conditions such as irritable bowel syndrome (IBS), ulcers, or infections. Your doctor may recommend dietary changes or tests like blood work or an ultrasound to determine the cause.</p>
+
+                  <div className="p-4 bg-blue-600/10 border border-blue-600/20 shadow-md rounded-lg hover:bg-blue-600/20 transition-colors">
+                    <h3 className="font-semibold text-blue-600 dark:text-blue-400">I have stomach pain and bloating. What should I do?</h3>
+                    <p className="text-sm text-muted-foreground mt-2">Stomach pain and bloating can be caused by digestive issues like gas, constipation, food intolerances (like lactose or gluten), or more serious conditions such as irritable bowel syndrome (IBS), ulcers, or infections. Your doctor may recommend dietary changes or tests like blood work or an ultrasound to determine the cause.</p>
                   </div>
-                  <div className="p-4 bg-gray-100 shadow-md rounded-lg">
-                    <h3 className="font-semibold">Why do I have frequent urination?</h3>
-                    <p className="text-sm">Frequent urination can be a symptom of a urinary tract infection (UTI), diabetes, or prostate issues in men. It can also occur if you’re drinking more fluids than usual or consuming diuretics like caffeine. If it's persistent or accompanied by pain, blood in the urine, or a burning sensation, it’s important to visit a doctor.</p>
+
+                  <div className="p-4 bg-blue-600/10 border border-blue-600/20 shadow-md rounded-lg hover:bg-blue-600/20 transition-colors">
+                    <h3 className="font-semibold text-blue-600 dark:text-blue-400">Why do I have frequent urination?</h3>
+                    <p className="text-sm text-muted-foreground mt-2">Frequent urination can be a symptom of a urinary tract infection (UTI), diabetes, or prostate issues in men. It can also occur if you&apos;re drinking more fluids than usual or consuming diuretics like caffeine. If it&apos;s persistent or accompanied by pain, blood in the urine, or a burning sensation, it&apos;s important to visit a doctor.</p>
                   </div>
-                  <div className="p-4 bg-gray-100 shadow-md rounded-lg">
-                    <h3 className="font-semibold">I’m having trouble sleeping. What could be the cause?</h3>
-                    <p className="text-sm">Excessive thirst can be a sign of dehydration, diabetes, or an electrolyte imbalance. If it’s happening regularly or if you're also experiencing frequent urination, fatigue, or blurry vision, it’s important to consult a doctor to rule out conditions like diabetes.</p>
+
+                  <div className="p-4 bg-blue-600/10 border border-blue-600/20 shadow-md rounded-lg hover:bg-blue-600/20 transition-colors">
+                    <h3 className="font-semibold text-blue-600 dark:text-blue-400">I&apos;m having trouble sleeping. What could be the cause?</h3>
+                    <p className="text-sm text-muted-foreground mt-2">Trouble sleeping, or insomnia, can be caused by stress, anxiety, caffeine intake, sleep apnea, or other underlying health conditions. If poor sleep persists, it can affect your health, so your doctor may ask about your sleep habits, lifestyle, and may recommend a sleep study or relaxation techniques.</p>
                   </div>
-                  <div className="p-4 bg-gray-100 shadow-md rounded-lg">
-                    <h3 className="font-semibold">Why am I always feeling thirsty?</h3>
-                    <p className="text-sm">Trouble sleeping, or insomnia, can be caused by stress, anxiety, caffeine intake, sleep apnea, or other underlying health conditions. If poor sleep persists, it can affect your health, so your doctor may ask about your sleep habits, lifestyle, and may recommend a sleep study or relaxation techniques.</p>
+
+                  <div className="p-4 bg-blue-600/10 border border-blue-600/20 shadow-md rounded-lg hover:bg-blue-600/20 transition-colors">
+                    <h3 className="font-semibold text-blue-600 dark:text-blue-400">I&apos;m always feeling thirsty. What could be the cause?</h3>
+                    <p className="text-sm text-muted-foreground mt-2">Excessive thirst can be a sign of dehydration, diabetes, or an electrolyte imbalance. If it&apos;s happening regularly or if you&apos;re also experiencing frequent urination, fatigue, or blurry vision, it&apos;s important to consult a doctor to rule out conditions like diabetes.</p>
                   </div>
-                  <div className="p-4 bg-gray-100 shadow-md rounded-lg">
-                    <h3 className="font-semibold">I have unexplained weight loss. Should I be concerned?</h3>
-                    <p className="text-sm">Unintentional weight loss can be caused by a variety of factors including thyroid issues, diabetes, cancer, or digestive problems. If you're losing weight without trying, it's important to visit a doctor for an evaluation to rule out any serious conditions.</p>
+
+                  <div className="p-4 bg-blue-600/10 border border-blue-600/20 shadow-md rounded-lg hover:bg-blue-600/20 transition-colors">
+                    <h3 className="font-semibold text-blue-600 dark:text-blue-400">I have unexplained weight loss. Should I be concerned?</h3>
+                    <p className="text-sm text-muted-foreground mt-2">Unintentional weight loss can be caused by a variety of factors including thyroid issues, diabetes, cancer, or digestive problems. If you&apos;re losing weight without trying, it&apos;s important to visit a doctor for an evaluation to rule out any serious conditions.</p>
                   </div>
-                  <div className="p-4 bg-gray-100 shadow-md rounded-lg">
-                    <h3 className="font-semibold">Why do I have joint pain and stiffness?</h3>
-                    <p className="text-sm">Joint pain and stiffness can be caused by many factors, such as arthritis, overuse of muscles, or an injury. If the pain is persistent or worsens over time, it could indicate a chronic condition like osteoarthritis or rheumatoid arthritis. Your doctor can recommend treatments, lifestyle changes, or refer you to a specialist.</p>
+
+                  <div className="p-4 bg-blue-600/10 border border-blue-600/20 shadow-md rounded-lg hover:bg-blue-600/20 transition-colors">
+                    <h3 className="font-semibold text-blue-600 dark:text-blue-400">Why do I have joint pain and stiffness?</h3>
+                    <p className="text-sm text-muted-foreground mt-2">Joint pain and stiffness can be caused by many factors, such as arthritis, overuse of muscles, or an injury. If the pain is persistent or worsens over time, it could indicate a chronic condition like osteoarthritis or rheumatoid arthritis. Your doctor can recommend treatments, lifestyle changes, or refer you to a specialist.</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="flex-1 p-4 bg-white shadow-md rounded-lg">
+            <div className="flex-1 p-4 bg-card border border-blue-600/20 shadow-md rounded-lg">
               <h2 className="text-2xl font-semibold mb-4">Book Appointment</h2>
               <form onSubmit={handleAppointmentSubmit} className="space-y-4">
                 <div className="space-y-2">
@@ -308,8 +323,9 @@ return (
                     id="appointment-name"
                     placeholder="Enter your name"
                     required
-                    value={name} // Bind state
-                    onChange={(e) => setName(e.target.value)} // Handle change
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="border-blue-600/20"
                   />
                 </div>
                 <div className="space-y-2">
@@ -319,8 +335,9 @@ return (
                     type="email"
                     placeholder="Enter your email"
                     required
-                    value={email} // Bind state
-                    onChange={(e) => setEmail(e.target.value)} // Handle change
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="border-blue-600/20"
                   />
                 </div>
                 <div className="space-y-2">
@@ -331,9 +348,15 @@ return (
                     value={appointmentDate}
                     onChange={(e) => setAppointmentDate(e.target.value)}
                     required
+                    className="border-blue-600/20"
                   />
                 </div>
-                <Button type="submit" className="w-full">Book Appointment</Button>
+                <Button 
+                  type="submit" 
+                  className="w-full bg-blue-600/20 text-blue-600 dark:text-blue-400 hover:bg-blue-600/30 border border-blue-600/20"
+                >
+                  Book Appointment
+                </Button>
               </form>
             </div>
           </div>

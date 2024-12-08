@@ -123,7 +123,7 @@ class Doctor(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    appointments = relationship("Appointment", back_populates="doctor")
+    # appointments = relationship("Appointment", back_populates="doctor")
 
 class Appointment(Base):
     __tablename__ = "appointments"
@@ -137,3 +137,4 @@ class Appointment(Base):
     created_at = Column(DateTime, server_default=func.now())
 
     user = relationship("User", back_populates="appointments")
+    doctor_id = Column(Integer, ForeignKey("doctors.id"), nullable=True)

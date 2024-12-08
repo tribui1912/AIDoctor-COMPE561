@@ -1,8 +1,7 @@
 'use client'
 import Image from 'next/image'
 import React, { useCallback, useEffect, useState } from 'react'
-import useEmblaCarousel, { EmblaOptionsType } from 'embla-carousel-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import useEmblaCarousel from 'embla-carousel-react'
 
 export default function DoctorsServices() {
   const doctors = [
@@ -12,7 +11,7 @@ export default function DoctorsServices() {
       specialty: "Cardiothoracic Surgery",
       image: "https://assets-auto.rbl.ms/60dbbb4a77cb576fdbdb044851cad1f5314bdd87bf2fb5d29f56e04cd009e2be",
       objectFit: "cover",
-      objectPosition: "100% 0%",
+      objectPosition: "center top",
     },
     {
       name: "Dr. Meredith Grey",
@@ -20,7 +19,7 @@ export default function DoctorsServices() {
       specialty: "Neurological Surgery",
       image: "https://s2.r29static.com/bin/entry/506/x,80/2031793/image.jpg",
       objectFit: "cover",
-      objectPosition: "100% 1%",
+      objectPosition: "center top",
     },
     {
       name: "Dr. Derek Shepherd",
@@ -28,7 +27,7 @@ export default function DoctorsServices() {
       specialty: "Surgical Oncology",
       image: "https://www.hollywoodreporter.com/wp-content/uploads/2023/04/GettyImages-93740544.jpg?w=800",
       objectFit: "cover",
-      objectPosition: "30% 10%",
+      objectPosition: "center top",
     },
     {
       name: "Dr. Alex Karev",
@@ -195,13 +194,39 @@ export default function DoctorsServices() {
   }
 
   // Carousel implementation
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true })
-  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: true,
+    align: 'start',
+    slidesToScroll: 1,
+    containScroll: 'trimSnaps'
+  })
 
-  const slides = Object.entries(specialties).map(([category, items]) => ({
-    category,
-    items
-  }))
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [scrollSnaps, setScrollSnaps] = useState<number[]>([])
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return
+    setSelectedIndex(emblaApi.selectedScrollSnap())
+  }, [emblaApi])
+
+  useEffect(() => {
+    if (!emblaApi) return
+
+    setScrollSnaps(emblaApi.scrollSnapList())
+    onSelect()
+    emblaApi.on('select', onSelect)
+    emblaApi.on('reInit', onSelect)
+
+    return () => {
+      emblaApi.off('select', onSelect)
+      emblaApi.off('reInit', onSelect)
+    }
+  }, [emblaApi, onSelect])
+
+  const scrollTo = useCallback(
+    (index: number) => emblaApi && emblaApi.scrollTo(index),
+    [emblaApi]
+  )
 
   const scrollPrev = useCallback(() => {
     if (emblaApi) emblaApi.scrollPrev()
@@ -211,19 +236,10 @@ export default function DoctorsServices() {
     if (emblaApi) emblaApi.scrollNext()
   }, [emblaApi])
 
-  const onSelect = useCallback(() => {
-    if (!emblaApi) return
-    setSelectedIndex(emblaApi.selectedScrollSnap())
-  }, [emblaApi])
-
-  useEffect(() => {
-    if (!emblaApi) return
-    onSelect()
-    emblaApi.on('select', onSelect)
-    return () => {
-      emblaApi.off('select', onSelect)
-    }
-  }, [emblaApi, onSelect])
+  const slides = Object.entries(specialties).map(([category, items]) => ({
+    category,
+    items
+  }))
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-12">
@@ -243,11 +259,7 @@ export default function DoctorsServices() {
                 src={doctor.image}
                 alt={`Portrait of ${doctor.name}`}
                 fill
-                style={{
-                  objectFit: doctor.objectFit,
-                  objectPosition: doctor.objectPosition
-                }}
-                className="transition-transform duration-300 group-hover:scale-110"
+                className={`transition-transform duration-300 group-hover:scale-110 object-${doctor.objectFit} object-[${doctor.objectPosition}]`}
               />
             </div>
             <h2 className="text-xl font-bold">{doctor.name}</h2>
@@ -261,7 +273,7 @@ export default function DoctorsServices() {
       <div className="mt-16">
         <h2 className="text-3xl font-bold text-center mb-8">Our Specialties</h2>
         <div className="max-w-4xl mx-auto">
-          <div className="overflow-hidden bg-muted rounded-lg" ref={emblaRef}>
+          <div className="overflow-hidden bg-muted rounded-lg border" ref={emblaRef}>
             <div className="flex">
               {slides.map((slide, index) => (
                 <div key={index} className="flex-[0_0_100%] min-w-0">
@@ -271,9 +283,16 @@ export default function DoctorsServices() {
                       {slide.items.map((specialty, idx) => (
                         <div
                           key={idx}
-                          className="bg-background rounded-lg p-4 hover:bg-muted/80 transition-colors"
+                          className="bg-blue-600/10 rounded-lg p-4 
+                          hover:bg-blue-600/20 
+                          transition-all duration-300 ease-in-out
+                          border border-blue-600/20 
+                          hover:border-blue-600/30 
+                          hover:shadow-lg hover:-translate-y-0.5
+                          hover:scale-[1.02]
+                          outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                         >
-                          <h4 className="text-lg font-semibold mb-2">
+                          <h4 className="text-lg font-semibold mb-2 text-blue-600 dark:text-blue-400">
                             {specialty.name}
                           </h4>
                           <p className="text-muted-foreground text-sm">
@@ -291,14 +310,15 @@ export default function DoctorsServices() {
           <div className="flex justify-between items-center mt-4">
             <button
               onClick={scrollPrev}
-              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors border border-muted-foreground/20 outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
               Previous
             </button>
             <div className="flex gap-2">
-              {slides.map((_, index) => (
-                <span
+              {scrollSnaps.map((_, index) => (
+                <button
                   key={index}
+                  onClick={() => scrollTo(index)}
                   className={`w-2 h-2 rounded-full transition-colors ${
                     index === selectedIndex ? 'bg-primary' : 'bg-muted-foreground/20'
                   }`}
@@ -307,7 +327,7 @@ export default function DoctorsServices() {
             </div>
             <button
               onClick={scrollNext}
-              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors border border-muted-foreground/20 outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
               Next
             </button>
