@@ -38,10 +38,6 @@ export default function ArticlesPage() {
   const fetchArticles = useCallback(async () => {
     try {
       setLoading(true)
-
-  useEffect(() => {
-    fetchArticles()
-  }, [fetchArticles])
       setError(null)
       
       const adminToken = getCookie('adminToken')
@@ -50,48 +46,44 @@ export default function ArticlesPage() {
         return
       }
 
-      try {
-        const response = await fetch('http://localhost:8000/api/admin/news', {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${adminToken}`,
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          credentials: 'include'
-        })
+      const response = await fetch('http://localhost:8000/api/admin/news', {
+        headers: {
+          'Authorization': `Bearer ${adminToken}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        credentials: 'include'
+      })
 
-        if (response.status === 401) {
-          router.push('/admin/login')
-          return
-        }
-
-        if (!response.ok) {
-          const errorData = await response.text()
-          throw new Error(`Server error: ${response.status} ${errorData}`)
-        }
-
-        const data = await response.json()
-        console.log('Articles response:', data)
-        
-        if (data && Array.isArray(data.items)) {
-          setArticles(data.items)
-        } else {
-          throw new Error('Invalid response format')
-        }
-      } catch (fetchError) {
-        if (fetchError instanceof TypeError && fetchError.message === 'Failed to fetch') {
-          throw new Error('Unable to connect to the server. Please check if the server is running.')
-        }
-        throw fetchError
+      if (response.status === 401) {
+        router.push('/admin/login')
+        return
       }
-    } catch (error) {
-      console.error('Error fetching articles:', error)
-      setError(error instanceof Error ? error.message : 'Failed to fetch articles')
-    } finally {
-      setLoading(false)
+
+      if (!response.ok) {
+        const errorData = await response.text()
+        throw new Error(`Server error: ${response.status} ${errorData}`)
+      }
+
+      const data = await response.json()
+      console.log('Articles response:', data)
+      
+      if (data && Array.isArray(data.items)) {
+        setArticles(data.items)
+      } else {
+        throw new Error('Invalid response format')
+      }
+    } catch (fetchError) {
+      if (fetchError instanceof TypeError && fetchError.message === 'Failed to fetch') {
+        throw new Error('Unable to connect to the server. Please check if the server is running.')
+      }
+      throw fetchError
     }
   }, [router])
+
+  useEffect(() => {
+    fetchArticles()
+  }, [fetchArticles])
 
   if (loading) {
     return (

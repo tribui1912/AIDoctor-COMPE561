@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Table,
@@ -49,7 +49,7 @@ export default function UsersPage() {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
   const [isAddingAdmin, setIsAddingAdmin] = useState(false)
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
@@ -90,7 +90,7 @@ export default function UsersPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [router])
 
   useEffect(() => {
     fetchUsers()
