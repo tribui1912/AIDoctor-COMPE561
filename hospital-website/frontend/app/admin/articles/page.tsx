@@ -34,6 +34,9 @@ export default function ArticlesPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalItems, setTotalItems] = useState(0)
+  const itemsPerPage = 10
 
   const fetchArticles = useCallback(async () => {
     try {
@@ -46,7 +49,8 @@ export default function ArticlesPage() {
         return
       }
 
-      const response = await fetch('http://localhost:8000/api/admin/news', {
+      const skip = (currentPage - 1) * itemsPerPage
+      const response = await fetch(`http://localhost:8000/api/admin/news?skip=${skip}&limit=${itemsPerPage}`, {
         headers: {
           'Authorization': `Bearer ${adminToken}`,
           'Content-Type': 'application/json',
@@ -66,24 +70,34 @@ export default function ArticlesPage() {
       }
 
       const data = await response.json()
-      console.log('Articles response:', data)
       
       if (data && Array.isArray(data.items)) {
         setArticles(data.items)
+        setTotalItems(data.total)
       } else {
         throw new Error('Invalid response format')
       }
     } catch (fetchError) {
       if (fetchError instanceof TypeError && fetchError.message === 'Failed to fetch') {
-        throw new Error('Unable to connect to the server. Please check if the server is running.')
+        setError('Unable to connect to the server. Please check if the server is running.')
+      } else {
+        setError(fetchError instanceof Error ? fetchError.message : String(fetchError))
       }
-      throw fetchError
+    } finally {
+      setLoading(false)
     }
-  }, [router])
+  }, [router, currentPage])
 
   useEffect(() => {
     fetchArticles()
   }, [fetchArticles])
+
+  useEffect(() => {
+    const maxValidPage = Math.max(1, Math.ceil(totalItems / itemsPerPage))
+    if (currentPage > maxValidPage) {
+      setCurrentPage(1)
+    }
+  }, [totalItems, currentPage, itemsPerPage])
 
   if (loading) {
     return (
@@ -103,6 +117,8 @@ export default function ArticlesPage() {
       </div>
     )
   }
+
+  const totalPages = Math.ceil(totalItems / itemsPerPage)
 
   return (
     <div className="space-y-6">
@@ -179,6 +195,30 @@ export default function ArticlesPage() {
         onOpenChange={setIsDeleteOpen}
         onSuccess={fetchArticles}
       />
+
+      {articles.length > 0 && (
+        <div className="flex justify-center items-center space-x-2 mt-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </Button>
+          <span className="text-sm">
+            Page {currentPage} of {totalPages}
+          </span>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </Button>
+        </div>
+      )}
     </div>
   )
 }

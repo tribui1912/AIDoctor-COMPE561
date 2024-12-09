@@ -13,7 +13,7 @@ def test_user_signup_login_appointment_flow(client):
     }
     
     response = client.post("/api/auth/signup", json=signup_data)
-    assert response.status_code == 201
+    assert response.status_code == 200
     
     # 2. Login with new user
     login_data = {
@@ -38,8 +38,7 @@ def test_user_signup_login_appointment_flow(client):
     appointment_data = {
         "date": appointment_time.isoformat(),
         "reason": "General checkup",
-        "status": "pending",
-        "user_id": 1
+        "status": "pending"
     }
     
     response = client.post(

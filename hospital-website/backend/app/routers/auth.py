@@ -5,11 +5,12 @@ from datetime import timedelta, datetime
 from typing import Optional
 import secrets
 
-from .. import crud, schemas
+from .. import crud, schemas, models
 from ..database import get_db
 from ..auth_utils import (
     create_access_token,
     get_current_user,
+    get_password_hash,
     ACCESS_TOKEN_EXPIRE_MINUTES
 )
 
@@ -18,22 +19,43 @@ router = APIRouter(
     tags=["authentication"]
 )
 
-@router.post("/signup", response_model=schemas.User, status_code=status.HTTP_201_CREATED)
+@router.post("/signup", response_model=schemas.SignupResponse)
 async def signup(
     user_data: schemas.UserCreate,
     db: Session = Depends(get_db)
 ):
-    # Check if user already exists
-    db_user = crud.get_user_by_email(db, user_data.email)
+    db_user = crud.get_user_by_email(db, email=user_data.email)
     if db_user:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code=400,
             detail="Email already registered"
         )
     
     # Create new user
-    user = crud.create_user(db, user_data)
-    return user
+    db_user = models.User(
+        email=user_data.email,
+        name=user_data.name,
+        hashed_password=get_password_hash(user_data.password),
+        phone=user_data.phone,
+        is_active=True,
+        email_verified=False,
+        created_at=datetime.utcnow()
+    )
+    
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    
+    # Return a dictionary that matches SignupResponse schema
+    return {
+        "id": db_user.id,
+        "email": db_user.email,
+        "name": db_user.name,
+        "phone": db_user.phone,
+        "is_active": db_user.is_active,
+        "email_verified": db_user.email_verified,
+        "created_at": db_user.created_at
+    }
 
 @router.post("/login", response_model=schemas.TokenResponse)
 async def login(

@@ -90,7 +90,7 @@ import {
   
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent>
+        <DialogContent className="bg-white">
           <DialogHeader>
             <DialogTitle>
               {article ? 'Edit Article' : 'Create New Article'}

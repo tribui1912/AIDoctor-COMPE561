@@ -19,7 +19,10 @@ class NewsArticle(NewsArticleBase):
     id: int
     admin_id: int
     date: datetime
-    model_config = ConfigDict(from_attributes=True)
+    
+    class Config:
+        orm_mode = True
+        from_attributes = True
 
 class UserBase(BaseModel):
     email: EmailStr
@@ -31,8 +34,6 @@ class UserCreate(BaseModel):
     name: str
     email: EmailStr
     password: str
-    role: str = "user"
-    status: str = "active"
     phone: Optional[str] = None
     
     model_config = ConfigDict(from_attributes=True)
@@ -46,6 +47,7 @@ class User(UserBase):
     is_active: bool
     email_verified: bool
     email_verified_at: Optional[datetime]
+    
     model_config = ConfigDict(from_attributes=True)
 
 class UserUpdate(BaseModel):
@@ -120,12 +122,8 @@ class LoginResponse(BaseModel):
 
 class AppointmentBase(BaseModel):
     date: datetime
-    reason: str
+    reason: str = "General checkup"
     status: str = "pending"
-    additional_notes: Optional[str] = None
-    user_id: Optional[int] = None
-    
-    model_config = ConfigDict(from_attributes=True)
 
 class AppointmentCreate(AppointmentBase):
     pass
@@ -140,7 +138,9 @@ class AppointmentUpdate(BaseModel):
 
 class Appointment(AppointmentBase):
     id: int
-    created_at: datetime
+    user_id: int
+
+    model_config = ConfigDict(from_attributes=True)
 
 class AdminLogin(BaseModel):
     username: str
@@ -254,13 +254,17 @@ class PublicNewsArticle(BaseModel):
     image_url: str
     date: datetime
     
-    model_config = ConfigDict(from_attributes=True)
+    class Config:
+        orm_mode = True
+        from_attributes = True
 
 class AdminNewsArticle(NewsArticle):
     admin_id: int
     status: str
     
-    model_config = ConfigDict(from_attributes=True)
+    class Config:
+        orm_mode = True
+        from_attributes = True
 
 class PaginatedAdminNewsArticles(BaseModel):
     total: int
@@ -279,5 +283,14 @@ class AdminResponse(BaseModel):
     status: str = "active"
     permissions: Optional[Dict[str, List[str]]] = None
     created_at: datetime
+    
+    model_config = ConfigDict(from_attributes=True)
+
+class SignupResponse(BaseModel):
+    id: int
+    email: str
+    name: str
+    created_at: datetime
+    is_active: bool
     
     model_config = ConfigDict(from_attributes=True)

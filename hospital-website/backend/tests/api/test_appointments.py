@@ -10,7 +10,7 @@ def test_create_appointment(client, admin_token, test_user):
     }
     
     response = client.post(
-        "/api/appointments",
+        "/api/appointments/admin",
         json=appointment_data,
         headers={"Authorization": f"Bearer {admin_token}"}
     )

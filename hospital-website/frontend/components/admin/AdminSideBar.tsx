@@ -6,7 +6,8 @@ import {
   Users, 
   NewspaperIcon, 
   LayoutDashboard,
-  LogOut 
+  LogOut,
+  Calendar
 } from 'lucide-react'
 
 interface AdminSidebarProps {
@@ -37,6 +38,11 @@ const AdminSidebar = ({ onLogout }: AdminSidebarProps) => {
       title: 'Users',
       href: '/admin/users',
       icon: Users
+    },
+    {
+      title: 'Appointments',
+      href: '/admin/appointments',
+      icon: Calendar
     }
   ]
 

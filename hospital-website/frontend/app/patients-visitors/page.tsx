@@ -16,6 +16,7 @@ const AuthDialog = dynamic(
 ) as unknown as React.ComponentType<{
   isOpen: boolean;
   onClose: Dispatch<SetStateAction<boolean>>;
+  onAuthSuccess?: () => void;
 }>;
 
 export default function PatientsVisitors() {
@@ -35,6 +36,10 @@ const handleAppointmentSubmit = async (e: React.FormEvent) => {
   setIsLoading(true);
 
   try {
+    // Format the date to include time
+    const appointmentDateTime = new Date(appointmentDate);
+    appointmentDateTime.setHours(9, 0, 0); // Set to 9:00 AM by default
+
     const response = await fetch('http://localhost:8000/api/appointments/', {
       method: 'POST',
       headers: {
@@ -42,11 +47,9 @@ const handleAppointmentSubmit = async (e: React.FormEvent) => {
         'Authorization': `Bearer ${getCookie('authToken')}`,
       },
       body: JSON.stringify({
-        date: new Date(appointmentDate).toISOString(),
-        reason: "Regular checkup",
-        status: "pending",
-        additional_notes: "",
-        user_id: null
+        date: appointmentDateTime.toISOString(),
+        reason: "General checkup",  // Default reason
+        status: "pending"
       }),
     });
 
@@ -60,8 +63,6 @@ const handleAppointmentSubmit = async (e: React.FormEvent) => {
     alert('Appointment booked successfully!');
     // Clear the form
     setAppointmentDate('');
-    setName('');
-    setEmail('');
   } catch (error) {
     console.error('Error:', error);
     alert(error instanceof Error ? error.message : 'An error occurred while booking the appointment.');
@@ -318,29 +319,6 @@ return (
               <h2 className="text-2xl font-semibold mb-4">Book Appointment</h2>
               <form onSubmit={handleAppointmentSubmit} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="appointment-name">Name</Label>
-                  <Input
-                    id="appointment-name"
-                    placeholder="Enter your name"
-                    required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="border-blue-600/20"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="appointment-email">Email</Label>
-                  <Input
-                    id="appointment-email"
-                    type="email"
-                    placeholder="Enter your email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="border-blue-600/20"
-                  />
-                </div>
-                <div className="space-y-2">
                   <Label htmlFor="appointment-date">Select Date</Label>
                   <Input
                     id="appointment-date"
@@ -366,6 +344,7 @@ return (
       <AuthDialog 
         isOpen={isPopupOpen} 
         onClose={setIsPopupOpen}
+        onAuthSuccess={() => setIsAuthenticated(true)}
       />
     )}
   </div>

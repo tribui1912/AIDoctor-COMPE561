@@ -42,7 +42,7 @@ import {
   
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent>
+        <DialogContent className="bg-white">
           <DialogHeader>
             <DialogTitle>Delete User</DialogTitle>
             <DialogDescription>

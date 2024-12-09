@@ -119,7 +119,7 @@ export function EditUserDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="bg-white">
         <DialogHeader>
           <DialogTitle>
             {user ? `Edit ${isAdmin ? 'Admin' : 'User'}` : `Add New ${isAdmin ? 'Admin' : 'User'}`}

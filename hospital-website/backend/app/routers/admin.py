@@ -157,6 +157,21 @@ async def delete_news_article(
     db: Session = Depends(get_db),
     current_admin: models.Admin = Depends(get_current_admin)
 ):
+    # First check if article exists, including drafts
+    article = crud.get_news_article(db, article_id, include_drafts=True)
+    if not article:
+        raise HTTPException(
+            status_code=404,
+            detail="Article not found"
+        )
+    
+    # Check if admin has permission to delete this article
+    if article.admin_id != current_admin.id and not current_admin.permissions.get("news", []):
+        raise HTTPException(
+            status_code=403,
+            detail="Not authorized to delete this article"
+        )
+    
     crud.delete_news_article(db, article_id)
     return {"message": "Article deleted successfully"}
 

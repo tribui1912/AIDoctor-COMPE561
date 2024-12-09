@@ -19,15 +19,17 @@ def get_news_articles(db: Session, skip: int = 0, limit: int = 100):
             detail=f"Database error: {str(e)}"
         )
 
-def get_news_article(db: Session, article_id: int, increment_views: bool = False):
+def get_news_article(db: Session, article_id: int, increment_views: bool = False, include_drafts: bool = False):
     try:
-        article = db.query(models.NewsArticle).filter(
-            models.NewsArticle.id == article_id,
-            models.NewsArticle.status == "published"  # Only show published articles
-        ).first()
+        query = db.query(models.NewsArticle).filter(models.NewsArticle.id == article_id)
+        
+        # Only filter by status if we're not including drafts and not incrementing views
+        if not include_drafts and increment_views:
+            query = query.filter(models.NewsArticle.status == "published")
+            
+        article = query.first()
         
         if article and increment_views:
-            # Increment views count only if explicitly requested
             article.views_count += 1
             db.commit()
             
@@ -92,8 +94,8 @@ def create_user(db: Session, user: schemas.UserCreate):
         name=user.name,
         phone=user.phone,
         hashed_password=hashed_password,
-        role=user.role,
-        status=user.status
+        is_active=True,
+        email_verified=False
     )
     db.add(db_user)
     db.commit()
@@ -161,18 +163,10 @@ def revoke_refresh_token(db: Session, token: str):
         db.refresh(db_token)
     return db_token
 
-def create_appointment(db: Session, appointment: schemas.AppointmentCreate):
+def create_appointment(db: Session, appointment: dict):
     """Create a new appointment"""
-    # Convert Pydantic model to dict and exclude any SQLAlchemy-incompatible fields
-    if hasattr(appointment, 'dict'):
-        # Pydantic v1
-        appointment_data = appointment.dict(exclude_unset=True)
-    else:
-        # Pydantic v2
-        appointment_data = appointment.model_dump(exclude_unset=True, exclude={'model_config'})
-    
-    # Create new appointment
-    db_appointment = models.Appointment(**appointment_data)
+    # Create new appointment directly from dict
+    db_appointment = models.Appointment(**appointment)
     db.add(db_appointment)
     db.commit()
     db.refresh(db_appointment)
