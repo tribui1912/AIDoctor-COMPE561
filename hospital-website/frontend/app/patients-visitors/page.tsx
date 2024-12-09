@@ -40,7 +40,7 @@ const handleAppointmentSubmit = async (e: React.FormEvent) => {
     const appointmentDateTime = new Date(appointmentDate);
     appointmentDateTime.setHours(9, 0, 0); // Set to 9:00 AM by default
 
-    const response = await fetch('http://108.215.168.9:30000/api/appointments/', {
+    const response = await fetch('http://34.220.228.30:30000/api/appointments/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -130,7 +130,7 @@ const handleChatSubmit = async (e: React.FormEvent) => {
   setIsLoading(true)
 
   try {
-    const response = await fetch('http://108.215.168.9:30000/api/chat', {
+    const response = await fetch('http://34.220.228.30:30000/api/chat', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

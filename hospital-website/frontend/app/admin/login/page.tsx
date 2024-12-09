@@ -22,7 +22,7 @@ export default function AdminLogin() {
     setError('')
 
     try {
-      const response = await fetch('http://108.215.168.9:30000/api/admin/login', {
+      const response = await fetch('http://34.220.228.30:30000/api/admin/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
