@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
 import { ThemeToggle } from '@/components/theme-toggle'
+import { useState } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,6 +17,7 @@ export default function RootLayout({
 }) {
   const pathname = usePathname()
   const isAdminRoute = pathname?.startsWith('/admin')
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   if (isAdminRoute) {
     return (
@@ -50,7 +52,7 @@ export default function RootLayout({
                 <Link href="/" className="text-2xl font-bold text-blue-600 dark:text-blue-400 hover:opacity-80 transition-opacity">
                   City General Hospital
                 </Link>
-                <div className="flex items-center gap-6">
+                <div className="hidden md:flex items-center gap-6">
                   <Link href="/about" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">About</Link>
                   <Link href="/doctors-services" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Doctors & Services</Link>
                   <Link href="/patients-visitors" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Patients & Visitors</Link>
@@ -59,7 +61,39 @@ export default function RootLayout({
                   <Link href="/contact" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Contact</Link>
                   <ThemeToggle />
                 </div>
+                <div className="md:hidden flex items-center gap-4">
+                  <ThemeToggle />
+                  <button
+                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    className="p-2 text-gray-600 dark:text-gray-300"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
+                      />
+                    </svg>
+                  </button>
+                </div>
               </div>
+              {isMenuOpen && (
+                <div className="md:hidden absolute top-full left-0 right-0 bg-white dark:bg-slate-950 border-b shadow-lg py-4 px-6 space-y-4">
+                  <Link href="/about" className="block hover:text-blue-600 dark:hover:text-blue-400 transition-colors">About</Link>
+                  <Link href="/doctors-services" className="block hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Doctors & Services</Link>
+                  <Link href="/patients-visitors" className="block hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Patients & Visitors</Link>
+                  <Link href="/location" className="block hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Locations</Link>
+                  <Link href="/news" className="block hover:text-blue-600 dark:hover:text-blue-400 transition-colors">News</Link>
+                  <Link href="/contact" className="block hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Contact</Link>
+                </div>
+              )}
             </nav>
           </header>
           <main className="flex-grow relative">

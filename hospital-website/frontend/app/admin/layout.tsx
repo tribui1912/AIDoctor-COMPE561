@@ -28,7 +28,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       console.log('refreshToken:', refreshToken ? 'exists' : 'not found')
       
       if (refreshToken) {
-        const response = await fetch('http://localhost:8000/api/admin/logout', {
+        const response = await fetch('http://108.215.168.9:30000/api/admin/logout', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

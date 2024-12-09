@@ -22,7 +22,7 @@ export default function AdminLogin() {
     setError('')
 
     try {
-      const response = await fetch('http://localhost:8000/api/admin/login', {
+      const response = await fetch('http://108.215.168.9:30000/api/admin/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
