@@ -20,7 +20,10 @@ def setup_middlewares(app: FastAPI):
     # CORS middleware
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["http://localhost:3000"],
+        allow_origins=[
+            "https://ai-doctor-compe-561.vercel.app",
+            "https://www.ai-doctor-compe-561.vercel.app"
+        ],
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
