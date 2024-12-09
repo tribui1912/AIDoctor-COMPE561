@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { DataTable } from '@/components/ui/data-table'
-import { columns } from './columns'
+import { columns } from '@/app/admin/appointments/columns'
 import { getCookie } from 'cookies-next'
 import { format } from 'date-fns'
 

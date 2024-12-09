@@ -39,9 +39,9 @@ export const columns: ColumnDef<Appointment>[] = [
       return (
         <Badge variant={
           status === 'pending' ? 'default' :
-          status === 'confirmed' ? 'success' :
+          status === 'confirmed' ? 'secondary' :
           status === 'cancelled' ? 'destructive' :
-          'secondary'
+          'default'
         }>
           {status}
         </Badge>
