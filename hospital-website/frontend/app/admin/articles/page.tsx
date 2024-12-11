@@ -50,7 +50,7 @@ export default function ArticlesPage() {
       }
 
       const skip = (currentPage - 1) * itemsPerPage
-      const response = await fetch(`http://34.220.228.30:30000/api/admin/news?skip=${skip}&limit=${itemsPerPage}`, {
+      const response = await fetch(`http://127.0.0.1:8000/api/admin/news?skip=${skip}&limit=${itemsPerPage}`, {
         headers: {
           'Authorization': `Bearer ${adminToken}`,
           'Content-Type': 'application/json',

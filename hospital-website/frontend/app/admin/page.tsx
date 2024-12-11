@@ -23,7 +23,7 @@ export default function AdminDashboard() {
           return
         }
 
-        const response = await fetch('http://34.220.228.30:30000/api/admin/stats', {
+        const response = await fetch('http://127.0.0.1:8000/api/admin/stats', {
           headers: {
             'Authorization': `Bearer ${adminToken}`
           }

@@ -32,7 +32,7 @@ export default function News() {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const response = await fetch('http://34.220.228.30:30000/api/news', {
+        const response = await fetch('http://127.0.0.1:8000/api/news', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ export default function News() {
 
   const handleReadMore = async (id: number) => {
     try {
-      const response = await fetch(`http://34.220.228.30:30000/api/news/${id}`)
+      const response = await fetch(`http://127.0.0.1:8000/api/news/${id}`)
       if (!response.ok) {
         throw new Error('Failed to fetch article details')
       }
