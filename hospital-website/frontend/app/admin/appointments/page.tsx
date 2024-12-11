@@ -20,7 +20,7 @@ export default function AppointmentsPage() {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/appointments/admin/all', {
+        const response = await fetch('http://127.0.0.1:8000/api/appointments/admin/all', {
           headers: {
             Authorization: `Bearer ${getCookie('adminToken')}`,
           },

@@ -61,13 +61,13 @@ export default function UsersPage() {
       }
 
       const [usersResponse, adminsResponse] = await Promise.all([
-        fetch('http://localhost:8000/api/admin/users', {
+        fetch('http://127.0.0.1:8000/api/admin/users', {
           headers: {
             'Authorization': `Bearer ${adminToken}`,
             'Content-Type': 'application/json'
           }
         }),
-        fetch('http://localhost:8000/api/admin/admins', {
+        fetch('http://127.0.0.1:8000/api/admin/admins', {
           headers: {
             'Authorization': `Bearer ${adminToken}`,
             'Content-Type': 'application/json'

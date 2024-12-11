@@ -40,7 +40,7 @@ const handleAppointmentSubmit = async (e: React.FormEvent) => {
     const appointmentDateTime = new Date(appointmentDate);
     appointmentDateTime.setHours(9, 0, 0); // Set to 9:00 AM by default
 
-    const response = await fetch('http://localhost:8000/api/appointments/', {
+    const response = await fetch('http://127.0.0.1:8000/api/appointments/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ const handleSubmit = async (e: React.FormEvent) => {
   setIsLoading(true);
 
   try {
-    const endpoint = 'http://localhost:8000/api/auth/login';
+    const endpoint = 'http://127.0.0.1:8000/api/auth/login';
     const body = new URLSearchParams({
       grant_type: 'password',
       username: email,
@@ -130,7 +130,7 @@ const handleChatSubmit = async (e: React.FormEvent) => {
   setIsLoading(true)
 
   try {
-    const response = await fetch('http://localhost:8000/api/chat', {
+    const response = await fetch('http://127.0.0.1:8000/api/chat', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
