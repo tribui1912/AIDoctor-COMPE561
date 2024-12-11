@@ -39,6 +39,7 @@ DB_NAME=hospital_db
 SECRET_KEY=$(openssl rand -hex 32)
 ACCESS_TOKEN_EXPIRE_MINUTES=30
 REFRESH_TOKEN_EXPIRE_DAYS=30
+OPENAI_API_KEY=<your_openai_api_key>
 EOF
 
 # Install Python 3.11

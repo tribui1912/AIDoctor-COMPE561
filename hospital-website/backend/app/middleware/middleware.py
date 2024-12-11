@@ -22,7 +22,9 @@ def setup_middlewares(app: FastAPI):
         CORSMiddleware,
         allow_origins=[
             "https://ai-doctor-compe-561.vercel.app",
-            "https://www.ai-doctor-compe-561.vercel.app"
+            "https://www.ai-doctor-compe-561.vercel.app",
+            "https://*.vercel.app",  # Allow all Vercel preview deployments
+            "http://localhost:3000"  # Allow local development
         ],
         allow_credentials=True,
         allow_methods=["*"],
